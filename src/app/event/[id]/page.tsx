@@ -16,6 +16,8 @@ import { Textarea } from "@/components/ui/textarea";
 import { Label } from "@/components/ui/label";
 import { useSession } from "next-auth/react";
 import { Navigation, MapPin } from "lucide-react";
+import LeafletMap from "@/components/ui/LeafletMap";
+import { MAHARASHTRA_DISTRICTS_COORDINATES, DEFAULT_MAHARASHTRA_CENTER } from "@/constants/locationConstants";
 
 interface Rating {
     rating: number;
@@ -383,14 +385,24 @@ export default function EventPage({ params }: { params: { id: string } }) {
                                                 <div className="space-y-4">
                                                     <h3 className="text-xl font-semibold">Event Location</h3>
                                                     <div className="aspect-video relative rounded-lg overflow-hidden border">
-                                                        <iframe
-                                                            width="100%"
-                                                            height="100%"
-                                                            loading="lazy"
-                                                            allowFullScreen
-                                                            src={`https://www.google.com/maps/embed/v1/place?key=${process.env.NEXT_PUBLIC_GOOGLE_MAPS_API}&q=${encodeURIComponent(event.address)}&zoom=15`}
-                                                            className="border-0"
-                                                        />
+                                                        {(() => {
+                                                            // Helper to find coordinates from address
+                                                            const addressLower = event.address.toLowerCase();
+                                                            const foundDistrict = Object.keys(MAHARASHTRA_DISTRICTS_COORDINATES).find(
+                                                                district => addressLower.includes(district.toLowerCase())
+                                                            );
+                                                            const center = foundDistrict 
+                                                                ? (MAHARASHTRA_DISTRICTS_COORDINATES as any)[foundDistrict] 
+                                                                : DEFAULT_MAHARASHTRA_CENTER;
+                                                            
+                                                            return (
+                                                                <LeafletMap 
+                                                                    center={center} 
+                                                                    zoom={13} 
+                                                                    markers={[{ position: center, content: event.title }]}
+                                                                />
+                                                            );
+                                                        })()}
                                                     </div>
                                                     <Button 
                                                         className="w-full bg-[#24AE7C] hover:bg-[#329c75] text-white gap-2"

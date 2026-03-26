@@ -31,7 +31,7 @@ const EventCard: React.FC<Props> = ({ data }) => {
         <Link href={`/event/${data._id}`}>
             <motion.div
                 whileHover={{ y: -5 }}
-                className="bg-white rounded-lg overflow-hidden shadow-md hover:shadow-xl transition-all duration-300"
+                className="bg-card text-card-foreground border border-border rounded-lg overflow-hidden shadow-md hover:shadow-xl transition-all duration-300"
             >
                 <div className="relative aspect-video">
                     <Image
@@ -64,19 +64,19 @@ const EventCard: React.FC<Props> = ({ data }) => {
                     </h3>
 
                     <div className="space-y-2">
-                        <div className="flex items-center gap-2 text-gray-600">
+                        <div className="flex items-center gap-2 text-muted-foreground">
                             <FaRegClock className="flex-shrink-0" />
                             <span className="text-sm">
                                 {formatDate(new Date(data.date))}
                             </span>
                         </div>
 
-                        <div className="flex items-center gap-2 text-gray-600">
+                        <div className="flex items-center gap-2 text-muted-foreground">
                             <IoLocationOutline className="flex-shrink-0" />
                             <span className="text-sm">{data.city}</span>
                         </div>
 
-                        <div className="flex items-center gap-2">
+                        <div className="flex items-center gap-2 text-foreground">
                             <FaTicketAlt className="text-[#24AE7C]" />
                             <span className="font-bold">
                                 {formatPrice(data.price)}

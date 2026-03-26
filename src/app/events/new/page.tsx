@@ -14,6 +14,8 @@ import {
     SelectValue,
 } from "@/components/ui/select";
 import { motion } from "framer-motion"; // Add animations
+import LeafletMap from "@/components/ui/LeafletMap";
+import { MAHARASHTRA_DISTRICTS_COORDINATES, DEFAULT_MAHARASHTRA_CENTER } from "@/constants/locationConstants";
 
 export default function CreateEventPage() {
     const router = useRouter();
@@ -302,6 +304,22 @@ export default function CreateEventPage() {
                                         placeholder="Enter event address"
                                         required
                                     />
+                                    {errors.address && (
+                                        <p className="text-red-500 text-sm mt-1">{errors.address}</p>
+                                    )}
+                                </div>
+                                <div>
+                                    <label className="text-sm font-medium text-gray-700">
+                                        City *
+                                    </label>
+                                    <Input
+                                        type="text"
+                                        value={city}
+                                        onChange={(e) => setCity(e.target.value)}
+                                        className="mt-1 bg-background border-border text-foreground"
+                                        placeholder="Enter event city"
+                                        required
+                                    />
                                     {errors.city && (
                                         <p className="text-red-500 text-sm mt-1">{errors.city}</p>
                                     )}
@@ -326,6 +344,24 @@ export default function CreateEventPage() {
                                     </svg>
                                     View on Google Maps
                                 </Button>
+                            </div>
+                            <div className="aspect-video relative rounded-lg overflow-hidden border mt-4">
+                                {(() => {
+                                    const foundDistrict = Object.keys(MAHARASHTRA_DISTRICTS_COORDINATES).find(
+                                        d => d.toLowerCase() === city.toLowerCase().trim()
+                                    );
+                                    const center = foundDistrict 
+                                        ? (MAHARASHTRA_DISTRICTS_COORDINATES as any)[foundDistrict] 
+                                        : DEFAULT_MAHARASHTRA_CENTER;
+                                    
+                                    return (
+                                        <LeafletMap 
+                                            center={center} 
+                                            zoom={foundDistrict ? 13 : 8} 
+                                            markers={foundDistrict ? [{ position: center, content: "Event Location" }] : []}
+                                        />
+                                    );
+                                })()}
                             </div>
                         </div>
 

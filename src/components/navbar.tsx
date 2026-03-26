@@ -77,56 +77,58 @@ const Navbar: React.FC<Props> = ({ background = true, className }) => {
     };
 
     const navbarClassName = cn(
-        'fixed z-50 top-0 w-full h-[80px] flex justify-between items-center px-4 md:px-12',
-        'transition-all duration-300',
-        {
-            'bg-background/80 backdrop-blur-md border-b': background || isScrolled,
-            'bg-transparent': !background && !isScrolled
-        },
+        'fixed z-50 transition-all duration-500 flex justify-between items-center px-6',
+        background || isScrolled
+            ? 'top-4 inset-x-4 md:inset-x-0 md:max-w-5xl md:mx-auto h-[64px] rounded-full bg-black/40 backdrop-blur-xl border border-white/10 shadow-[0_8px_32px_0_rgba(0,0,0,0.3)]'
+            : 'top-0 w-full h-[80px] px-4 md:px-12 bg-transparent',
         className
     );
 
     const linkClassName = cn(
-        buttonVariants({ variant: "ghost" }),
-        "transition-colors duration-300",
+        "text-sm font-medium transition-all duration-300 px-4 py-2 rounded-full",
         {
-            'text-foreground hover:text-[#329c75]': background || isScrolled,
-            'text-white hover:text-[#329c75]': !background && !isScrolled
+            'text-gray-300 hover:text-white hover:bg-white/10': background || isScrolled,
+            'text-white/80 hover:text-white hover:bg-white/10': !background && !isScrolled
         },
-        "hover:bg-transparent hover:cursor-pointer"
+        "hover:cursor-pointer"
     );
 
     return (
         <nav className={navbarClassName}>
-            <div className='flex flex-row items-center gap-2'>
-                <NavLink href="/" className={cn(linkClassName, "flex flex-row gap-3")}>
+            <div className='flex flex-row items-center gap-6'>
+                <NavLink href="/" className="flex flex-row items-center gap-3">
                     <motion.div
                         whileHover={{ scale: 1.05 }}
                         transition={{ type: "spring", stiffness: 400, damping: 10 }}
+                        className="bg-gradient-to-br from-[#24AE7C] to-[#1d8b63] p-[2px] rounded-2xl"
                     >
                         <Image
                             src="/images/logo.webp"
                             alt="Logo"
-                            width={40}
-                            height={40}
+                            width={36}
+                            height={36}
                             className="rounded-2xl"
                             priority
                         />
                     </motion.div>
-                    <p className={cn("font-semibold text-2xl", {
-                        "text-foreground": background || isScrolled,
+                    <p className={cn("font-bold text-xl tracking-tight", {
+                        "text-white": background || isScrolled,
                         "text-white": !background && !isScrolled
                     })}>
                         Aura
                     </p>
                 </NavLink>
-                <Separator orientation='vertical' className='hidden md:block bg-muted-foreground h-1/3' />
-                <NavLink href="/explore" className={cn(linkClassName, "hidden md:block")}>
-                    Explore events
-                </NavLink>
+                
+                <Separator orientation='vertical' className='hidden md:block bg-white/20 h-5' />
+                
+                <div className='hidden md:flex gap-1'>
+                    <NavLink href="/explore" className={linkClassName}>
+                        Explore Events
+                    </NavLink>
+                </div>
             </div>
 
-            <div className='hidden md:flex flex-row items-center gap-5'>
+            <div className='hidden md:flex flex-row items-center gap-4'>
                 {session && status === "authenticated" ? (
                     <UserMenu
                         session={session}
@@ -145,12 +147,12 @@ const Navbar: React.FC<Props> = ({ background = true, className }) => {
                 whileTap={{ scale: 0.95 }}
                 onClick={toggleMenu}
                 aria-label="Toggle navigation menu"
-                className={cn(buttonVariants({ variant: "ghost" }), {
-                    'text-foreground': background || isScrolled,
+                className={cn('md:hidden p-2 rounded-full hover:bg-white/10 transition-colors', {
+                    'text-white': background || isScrolled,
                     'text-white': !background && !isScrolled
-                }, 'md:hidden')}
+                })}
             >
-                {isMenuOpen ? <FaTimes size={24} /> : <FaBars size={24} />}
+                {isMenuOpen ? <FaTimes size={20} /> : <FaBars size={20} />}
             </motion.button>
 
             <AnimatePresence>
@@ -160,7 +162,7 @@ const Navbar: React.FC<Props> = ({ background = true, className }) => {
                         animate={{ opacity: 1, y: 0 }}
                         exit={{ opacity: 0, y: -20 }}
                         transition={{ duration: 0.2 }}
-                        className="absolute top-[80px] left-0 w-full bg-background border-b flex flex-col items-center gap-4 py-4 md:hidden"
+                        className="absolute top-[80px] left-4 right-4 rounded-2xl bg-black/80 backdrop-blur-xl border border-white/10 flex flex-col items-center gap-4 py-6 md:hidden shadow-2xl z-50"
                     >
                         <MobileMenuContent
                             session={session}
@@ -183,35 +185,45 @@ const UserMenu = ({ session, userBalance, handleSignOut, background, isScrolled 
     isScrolled: boolean;
 }) => (
     <DropdownMenu>
-        <DropdownMenuTrigger>
+        <DropdownMenuTrigger asChild>
             <motion.div
                 whileHover={{ scale: 1.05 }}
-                className={cn(buttonVariants({ variant: "ghost" }), {
-                    'text-foreground hover:text-[#329c75]': background || isScrolled,
-                    'text-white hover:text-[#329c75]': !background && !isScrolled
-                }, "hover:bg-accent hover:cursor-pointer flex flex-row items-center gap-2")}
+                className={cn("flex flex-row items-center gap-3 px-3 py-1.5 cursor-pointer rounded-full border border-white/10 transition-all", {
+                    'bg-white/5 hover:bg-white/10 text-white': background || isScrolled,
+                    'bg-transparent hover:bg-white/10 text-white': !background && !isScrolled
+                })}
             >
-                <Avatar className='w-[30px] h-[30px]'>
+                <div className="flex flex-col items-end hidden sm:flex">
+                    <span className="text-sm font-medium leading-none">{session.user.username}</span>
+                    <span className="text-xs text-gray-400 mt-1">${userBalance || session.user.balance}</span>
+                </div>
+                <Avatar className='w-8 h-8 border border-white/20'>
                     <AvatarImage src={`/uploads/${session.user.profilePicture}`} />
-                    <AvatarFallback className={background || isScrolled ? "text-white bg-[#329c75]" : "text-black bg-white"}>
-                        {session.user.username.slice(0, 2)}
+                    <AvatarFallback className="text-white bg-gradient-to-br from-[#24AE7C] to-[#1d8b63]">
+                        {session.user.username.slice(0, 2).toUpperCase()}
                     </AvatarFallback>
                 </Avatar>
-                <p className='font-semibold'>{session.user.username}</p>
             </motion.div>
         </DropdownMenuTrigger>
-        <DropdownMenuContent className="w-56">
-            <DropdownMenuLabel>My Account</DropdownMenuLabel>
-            <DropdownMenuSeparator />
-            <DropdownMenuLabel>Balance: ${userBalance || session.user.balance}</DropdownMenuLabel>
+        <DropdownMenuContent className="w-56 bg-black/90 backdrop-blur-xl border-white/10 text-white shadow-2xl">
+            <DropdownMenuLabel className="font-normal">
+                <div className="flex flex-col space-y-1">
+                    <p className="text-sm font-medium leading-none">{session.user.username}</p>
+                    <p className="text-xs leading-none text-gray-400">
+                        Balance: ${userBalance || session.user.balance}
+                    </p>
+                </div>
+            </DropdownMenuLabel>
+            <DropdownMenuSeparator className="bg-white/10" />
             <NavLink href={`/profile/${session.user.id}`}>
-                <DropdownMenuItem className='hover:cursor-pointer'>Profile</DropdownMenuItem>
+                <DropdownMenuItem className='hover:cursor-pointer hover:bg-white/10 focus:bg-white/10'>Profile</DropdownMenuItem>
             </NavLink>
             <NavLink href="/events">
-                <DropdownMenuItem className='hover:cursor-pointer'>My Events</DropdownMenuItem>
+                <DropdownMenuItem className='hover:cursor-pointer hover:bg-white/10 focus:bg-white/10'>My Events</DropdownMenuItem>
             </NavLink>
+            <DropdownMenuSeparator className="bg-white/10" />
             <DropdownMenuItem
-                className='text-red-600 hover:text-red-700 hover:cursor-pointer'
+                className='text-red-400 hover:text-red-300 hover:bg-red-500/10 focus:bg-red-500/10 focus:text-red-300 hover:cursor-pointer'
                 onClick={handleSignOut}
             >
                 Sign out
@@ -224,23 +236,18 @@ const AuthLinks = ({ background, isScrolled }: {
     background: boolean;
     isScrolled: boolean;
 }) => (
-    <div className='flex flex-row items-center gap-2'>
+    <div className='flex flex-row items-center gap-3'>
         <NavLink
             href="/login"
-            className={cn(buttonVariants({ variant: "ghost" }), {
-                'text-black hover:text-[#329c75]': background || isScrolled,
-                'text-white hover:text-[#329c75]': !background && !isScrolled
-            }, "hover:bg-transparent")}
+            className="text-sm font-medium text-gray-300 hover:text-white transition-colors"
         >
             Login
         </NavLink>
         <NavLink
             href="/register"
-            className={cn(buttonVariants({ variant: "default" }),
-                "bg-[#24AE7C] hover:bg-[#329c75]"
-            )}
+            className="text-sm font-medium bg-white text-black px-4 py-2 rounded-full hover:bg-gray-200 transition-colors"
         >
-            Create an account
+            Sign Up
         </NavLink>
     </div>
 );
@@ -248,12 +255,10 @@ const AuthLinks = ({ background, isScrolled }: {
 const CreateEventButton = () => (
     <NavLink
         href="/events/new"
-        className={cn(
-            buttonVariants({ size: "lg" }),
-            "bg-[#24AE7C] hover:bg-[#329c75] flex gap-2 font-bold"
-        )}
+        className="flex items-center gap-2 text-sm font-bold bg-gradient-to-r from-[#24AE7C] to-[#1d8b63] hover:from-[#329c75] hover:to-[#24AE7C] text-white px-5 py-2.5 rounded-full transition-all duration-300 shadow-[0_0_20px_rgba(36,174,124,0.3)] hover:shadow-[0_0_25px_rgba(36,174,124,0.5)] transform hover:-translate-y-0.5"
     >
-        <FaCalendarMinus size={20} />Create Event
+        <FaCalendarMinus size={16} />
+        <span>Create Event</span>
     </NavLink>
 );
 

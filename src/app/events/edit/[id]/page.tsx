@@ -32,6 +32,7 @@ interface Event {
     _id: string;
     title: string;
     address: string;
+    city: string;
     date: string;
     price: number;
     description: string;
@@ -55,6 +56,8 @@ export default function EditEventPage({ params }: { params: { id: string } }) {
     const [price, setPrice] = useState(0);
     const [seats, setSeats] = useState(10);
     const [category, setCategory] = useState("");
+    const [address, setAddress] = useState("");
+    const [city, setCity] = useState("");
     const [image, setImage] = useState<File | null>(null);
     const [imagePreview, setImagePreview] = useState("");
     const [date, setDate] = useState("");
@@ -74,6 +77,8 @@ export default function EditEventPage({ params }: { params: { id: string } }) {
                     setDescription(event.description);
                     setPrice(event.price);
                     setSeats(event.availableSeats);
+                    setAddress(event.address || "");
+                    setCity(event.city || "");
                     setCategory(event.category.toLowerCase());
                     setDate(event.date);
                     setTime(new Date(event.date).toLocaleTimeString("en-GB", {
@@ -116,6 +121,8 @@ export default function EditEventPage({ params }: { params: { id: string } }) {
         formData.append("date", date);
         formData.append("category", category);
         formData.append("time", time);
+        formData.append("address", address);
+        formData.append("city", city);
         if (image) {
             formData.append("file", image);
         }
@@ -304,6 +311,33 @@ export default function EditEventPage({ params }: { params: { id: string } }) {
                                             value={time}
                                             onChange={(e) => setTime(e.target.value)}
                                             className="mt-1"
+                                            required
+                                        />
+                                    </div>
+                                </div>
+
+                                <div className="grid grid-cols-2 gap-4">
+                                    <div>
+                                        <label className="text-sm font-medium text-gray-700">
+                                            Address *
+                                        </label>
+                                        <Input
+                                            type="text"
+                                            value={address}
+                                            onChange={(e) => setAddress(e.target.value)}
+                                            className="mt-1 bg-background border-border text-foreground"
+                                            required
+                                        />
+                                    </div>
+                                    <div>
+                                        <label className="text-sm font-medium text-gray-700">
+                                            City *
+                                        </label>
+                                        <Input
+                                            type="text"
+                                            value={city}
+                                            onChange={(e) => setCity(e.target.value)}
+                                            className="mt-1 bg-background border-border text-foreground"
                                             required
                                         />
                                     </div>

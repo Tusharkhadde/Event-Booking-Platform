@@ -42,7 +42,8 @@ export async function PUT(req: Request, { params }: { params: { id: string } }) 
                 description: string;
                 price: number;
                 date: string;
-                location: object;
+                address: string;
+                city: string;
                 category: string;
                 availableSeats: number;
             }> = {};
@@ -67,8 +68,11 @@ export async function PUT(req: Request, { params }: { params: { id: string } }) 
                 })}, ${time}`;
             }
 
-            const location = formData.get('location') ? JSON.parse(formData.get('location') as string) : null;
-            if (location) updateFields.location = location;
+            const address = formData.get('address')?.toString();
+            if (address) updateFields.address = address;
+
+            const city = formData.get('city')?.toString();
+            if (city) updateFields.city = city;
 
             const category = formData.get('category')?.toString();
             if (category) updateFields.category = category;
