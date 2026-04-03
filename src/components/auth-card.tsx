@@ -74,7 +74,7 @@ export function AuthCard({
 
         <CardFooter className="flex items-center justify-center text-sm text-muted-foreground pb-8">
           {footerText}
-          <a className="ml-1 text-[#24AE7C] hover:underline font-medium" href={footerLinkHref}>
+          <a className="ml-1 text-[#F59E0B] hover:underline font-medium" href={footerLinkHref}>
             {footerLinkText}
           </a>
         </CardFooter>

@@ -167,7 +167,7 @@ export default function SettingsPage() {
                                     <TabsTrigger
                                         key={value}
                                         value={value}
-                                        className="data-[state=active]:bg-[#24AE7C] data-[state=active]:text-primary-foreground flex flex-col items-center justify-center gap-2 p-4 h-24"
+                                        className="data-[state=active]:bg-[#F59E0B] data-[state=active]:text-primary-foreground flex flex-col items-center justify-center gap-2 p-4 h-24"
                                     >
                                         <Icon className="h-5 w-5" />
                                         {label}
@@ -192,7 +192,7 @@ export default function SettingsPage() {
                                                 disabled={isUpdatingUsername}
                                             />
                                             <Button
-                                                className="w-full bg-[#24AE7C] hover:bg-[#329c75]"
+                                                className="w-full bg-[#F59E0B] hover:bg-[#D97706]"
                                                 onClick={handleUsernameChange}
                                                 disabled={isUpdatingUsername}
                                             >
@@ -210,7 +210,7 @@ export default function SettingsPage() {
                                         </CardHeader>
                                         <CardContent className="space-y-4">
                                             <Input defaultValue={session?.user.email} className="shadow-xl" ref={emailRef} disabled={isUpdatingEmail} />
-                                            <Button className="w-full bg-[#24AE7C] hover:bg-[#329c75]" onClick={handleEmailChange} disabled={isUpdatingEmail}>Update Email</Button>
+                                            <Button className="w-full bg-[#F59E0B] hover:bg-[#D97706]" onClick={handleEmailChange} disabled={isUpdatingEmail}>Update Email</Button>
                                         </CardContent>
                                     </Card>
 
@@ -232,7 +232,7 @@ export default function SettingsPage() {
                                                     <Input type="password" className="shadow-xl" ref={newPasswordRef} disabled={isUpdatingPassword} />
                                                 </div>
                                             </div>
-                                            <Button className="w-full bg-[#24AE7C] hover:bg-[#329c75]" onClick={handlePasswordChange} disabled={isUpdatingPassword}>Change Password</Button>
+                                            <Button className="w-full bg-[#F59E0B] hover:bg-[#D97706]" onClick={handlePasswordChange} disabled={isUpdatingPassword}>Change Password</Button>
                                         </CardContent>
                                     </Card>
                                 </div>

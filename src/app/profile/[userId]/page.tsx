@@ -57,6 +57,16 @@ export interface Review {
   event: Event;
 }
 
+export interface Booking {
+  _id: string;
+  event: Event;
+  bookingDate: string;
+  numberOfSeats: number;
+  totalPrice: number;
+  status: "confirmed" | "cancelled";
+  paymentStatus: "paid" | "pending";
+}
+
 interface ProfileData {
   user: User;
   events: Event[];
@@ -340,7 +350,7 @@ export default function UserProfilePage({ params }: { params: { userId: string }
         </motion.div>
 
         <Tabs defaultValue="events" className="space-y-6">
-          <TabsList className="w-full justify-start">
+          <TabsList className="w-full justify-start flex-wrap gap-1">
             <TabsTrigger value="events">Events</TabsTrigger>
             <TabsTrigger value="reviews">Reviews</TabsTrigger>
           </TabsList>
