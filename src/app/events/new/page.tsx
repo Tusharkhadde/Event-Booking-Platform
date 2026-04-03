@@ -1,5 +1,5 @@
 "use client";
-import { useEffect, useState } from "react";
+import { useEffect, useState, useMemo } from "react";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import { DatePickerDemo } from "@/components/ui/date-picker";
@@ -30,6 +30,7 @@ export default function CreateEventPage() {
     const [city, setCity] = useState("");
     const [date, setDate] = useState("");
     const [image, setImage] = useState<File | null>(null);
+    const [imagePreview, setImagePreview] = useState<string | null>(null);
 
     // Add loading state
     const [isSubmitting, setIsSubmitting] = useState(false);
@@ -140,7 +141,7 @@ export default function CreateEventPage() {
                                         type="text"
                                         value={title}
                                         onChange={(e) => setTitle(e.target.value)}
-                                        className="mt-1 transition-all duration-200 focus:ring-2 focus:ring-[#24AE7C] bg-background border-border text-foreground"
+                                        className="mt-1 transition-all duration-200 focus:ring-2 focus:ring-[#F59E0B] bg-background border-border text-foreground"
                                         placeholder="Enter event title"
                                         maxLength={50}
                                         required
@@ -174,7 +175,7 @@ export default function CreateEventPage() {
                                     <textarea
                                         value={description}
                                         onChange={(e) => setDescription(e.target.value)}
-                                        className="mt-1 w-full rounded-md border border-border bg-background text-foreground p-3 focus:ring-2 focus:ring-[#24AE7C] focus:border-transparent transition-all duration-200"
+                                        className="mt-1 w-full rounded-md border border-border bg-background text-foreground p-3 focus:ring-2 focus:ring-[#F59E0B] focus:border-transparent transition-all duration-200"
                                         rows={4}
                                         placeholder="Describe your event..."
                                         maxLength={250}
@@ -246,46 +247,90 @@ export default function CreateEventPage() {
                                     <label className="text-sm font-medium text-muted-foreground">
                                         Event Image
                                     </label>
-                                    <div className="mt-1 flex justify-center px-6 pt-5 pb-6 border-2 border-border border-dashed rounded-md hover:border-[#24AE7C] transition-colors duration-200">
-                                        <div className="space-y-1 text-center">
-                                            <svg
-                                                className="mx-auto h-12 w-12 text-muted-foreground"
-                                                stroke="currentColor"
-                                                fill="none"
-                                                viewBox="0 0 48 48"
-                                                aria-hidden="true"
-                                            >
-                                                <path
-                                                    d="M28 8H12a4 4 0 00-4 4v20m32-12v8m0 0v8a4 4 0 01-4 4H12a4 4 0 01-4-4v-4m32-4l-3.172-3.172a4 4 0 00-5.656 0L28 28M8 32l9.172-9.172a4 4 0 015.656 0L28 28m0 0l4 4m4-24h8m-4-4v8m-12 4h.02"
-                                                    strokeWidth={2}
-                                                    strokeLinecap="round"
-                                                    strokeLinejoin="round"
-                                                />
-                                            </svg>
-                                            <div className="flex text-sm text-muted-foreground">
+                                    {imagePreview ? (
+                                        <div className="mt-1 relative rounded-md overflow-hidden border-2 border-[#F59E0B] group">
+                                            <img
+                                                src={imagePreview}
+                                                alt="Event preview"
+                                                className="w-full h-48 object-cover"
+                                            />
+                                            <div className="absolute inset-0 bg-black/50 opacity-0 group-hover:opacity-100 transition-opacity duration-200 flex items-center justify-center">
                                                 <label
                                                     htmlFor="file-upload"
-                                                    className="relative cursor-pointer bg-background rounded-md font-medium text-[#24AE7C] hover:text-[#1d8b63] focus-within:outline-none focus-within:ring-2 focus-within:ring-offset-2 focus-within:ring-[#24AE7C]"
+                                                    className="cursor-pointer text-white text-sm font-medium bg-[#F59E0B] hover:bg-[#D97706] px-4 py-2 rounded-md transition-colors duration-200"
                                                 >
-                                                    <span>Upload a file</span>
+                                                    Change Image
                                                     <Input
                                                         id="file-upload"
                                                         type="file"
                                                         className="sr-only"
                                                         accept="image/*"
-                                                        onChange={(e) =>
-                                                            setImage(e.target.files?.[0] || null)
-                                                        }
-                                                        required
+                                                        onChange={(e) => {
+                                                            const file = e.target.files?.[0] || null;
+                                                            setImage(file);
+                                                            if (file) {
+                                                                const reader = new FileReader();
+                                                                reader.onloadend = () => setImagePreview(reader.result as string);
+                                                                reader.readAsDataURL(file);
+                                                            } else {
+                                                                setImagePreview(null);
+                                                            }
+                                                        }}
                                                     />
                                                 </label>
-                                                <p className="pl-1">or drag and drop</p>
                                             </div>
-                                            <p className="text-xs text-muted-foreground">
-                                                PNG, JPG, GIF up to 10MB
-                                            </p>
+                                            <div className="absolute bottom-2 left-2 bg-black/60 rounded px-2 py-0.5">
+                                                <p className="text-xs text-white truncate max-w-[150px]">{image?.name}</p>
+                                            </div>
                                         </div>
-                                    </div>
+                                    ) : (
+                                        <div className="mt-1 flex justify-center px-6 pt-5 pb-6 border-2 border-border border-dashed rounded-md hover:border-[#F59E0B] transition-colors duration-200">
+                                            <div className="space-y-1 text-center">
+                                                <svg
+                                                    className="mx-auto h-12 w-12 text-muted-foreground"
+                                                    stroke="currentColor"
+                                                    fill="none"
+                                                    viewBox="0 0 48 48"
+                                                    aria-hidden="true"
+                                                >
+                                                    <path
+                                                        d="M28 8H12a4 4 0 00-4 4v20m32-12v8m0 0v8a4 4 0 01-4 4H12a4 4 0 01-4-4v-4m32-4l-3.172-3.172a4 4 0 00-5.656 0L28 28M8 32l9.172-9.172a4 4 0 015.656 0L28 28m0 0l4 4m4-24h8m-4-4v8m-12 4h.02"
+                                                        strokeWidth={2}
+                                                        strokeLinecap="round"
+                                                        strokeLinejoin="round"
+                                                    />
+                                                </svg>
+                                                <div className="flex text-sm text-muted-foreground">
+                                                    <label
+                                                        htmlFor="file-upload"
+                                                        className="relative cursor-pointer bg-background rounded-md font-medium text-[#F59E0B] hover:text-[#D97706] focus-within:outline-none focus-within:ring-2 focus-within:ring-offset-2 focus-within:ring-[#F59E0B]"
+                                                    >
+                                                        <span>Upload a file</span>
+                                                        <Input
+                                                            id="file-upload"
+                                                            type="file"
+                                                            className="sr-only"
+                                                            accept="image/*"
+                                                            onChange={(e) => {
+                                                                const file = e.target.files?.[0] || null;
+                                                                setImage(file);
+                                                                if (file) {
+                                                                    const reader = new FileReader();
+                                                                    reader.onloadend = () => setImagePreview(reader.result as string);
+                                                                    reader.readAsDataURL(file);
+                                                                }
+                                                            }}
+                                                            required
+                                                        />
+                                                    </label>
+                                                    <p className="pl-1">or drag and drop</p>
+                                                </div>
+                                                <p className="text-xs text-muted-foreground">
+                                                    PNG, JPG, GIF up to 10MB
+                                                </p>
+                                            </div>
+                                        </div>
+                                    )}
                                 </div>
                             </div>
                         </div>
@@ -336,7 +381,7 @@ export default function CreateEventPage() {
                                         }
                                     }}
                                     variant="outline"
-                                    className="border-[#24AE7C] text-[#24AE7C] hover:bg-[#24AE7C] hover:text-white transition-all duration-200"
+                                    className="border-[#F59E0B] text-[#F59E0B] hover:bg-[#F59E0B] hover:text-white transition-all duration-200"
                                 >
                                     <svg className="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                         <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z" />
@@ -346,7 +391,7 @@ export default function CreateEventPage() {
                                 </Button>
                             </div>
                             <div className="aspect-video relative rounded-lg overflow-hidden border mt-4">
-                                {(() => {
+                                {useMemo(() => {
                                     const foundDistrict = Object.keys(MAHARASHTRA_DISTRICTS_COORDINATES).find(
                                         d => d.toLowerCase() === city.toLowerCase().trim()
                                     );
@@ -361,7 +406,7 @@ export default function CreateEventPage() {
                                             markers={foundDistrict ? [{ position: center, content: "Event Location" }] : []}
                                         />
                                     );
-                                })()}
+                                }, [city])}
                             </div>
                         </div>
 
@@ -369,7 +414,7 @@ export default function CreateEventPage() {
                             <Button
                                 type="submit"
                                 disabled={isSubmitting}
-                                className="bg-[#24AE7C] hover:bg-[#1d8b63] text-white px-8 py-3 rounded-lg transition-all duration-200 transform hover:scale-105"
+                                className="bg-[#F59E0B] hover:bg-[#D97706] text-white px-8 py-3 rounded-lg transition-all duration-200 transform hover:scale-105"
                             >
                                 {isSubmitting ? (
                                     <span className="flex items-center">

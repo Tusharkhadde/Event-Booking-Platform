@@ -72,7 +72,7 @@ export default function EventsPage() {
                         whileHover={{ scale: 1.05 }}
                         whileTap={{ scale: 0.95 }}
                         href="/events/new"
-                        className="bg-[#24AE7C] hover:bg-[#329c75] text-white px-6 py-3 rounded-lg font-medium transition-colors duration-200"
+                        className="bg-[#F59E0B] hover:bg-[#D97706] text-white px-6 py-3 rounded-lg font-medium transition-colors duration-200"
                     >
                         Create New Event
                     </motion.a>
@@ -80,7 +80,7 @@ export default function EventsPage() {
 
                 {isLoading ? (
                     <div className="flex justify-center items-center h-64">
-                        <Loader2 className="h-8 w-8 animate-spin text-[#24AE7C]" />
+                        <Loader2 className="h-8 w-8 animate-spin text-[#F59E0B]" />
                     </div>
                 ) : error ? (
                     <div className="text-center py-12">
@@ -105,7 +105,7 @@ export default function EventsPage() {
                             whileHover={{ scale: 1.05 }}
                             whileTap={{ scale: 0.95 }}
                             href="/events/new"
-                            className="inline-block bg-[#24AE7C] hover:bg-[#329c75] text-white px-6 py-3 rounded-lg font-medium transition-colors duration-200"
+                            className="inline-block bg-[#F59E0B] hover:bg-[#D97706] text-white px-6 py-3 rounded-lg font-medium transition-colors duration-200"
                         >
                             Create Event
                         </motion.a>
