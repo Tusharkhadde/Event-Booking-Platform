@@ -155,7 +155,7 @@ const Filter: React.FC<FilterProps> = ({ onFilterChange }) => {
 
                     <Button
                         onClick={applyFilters}
-                        className="w-full bg-[#24AE7C] hover:bg-[#329c75] text-white"
+                        className="w-full bg-[#F59E0B] hover:bg-[#D97706] text-white"
                     >
                         Apply Filters
                     </Button>

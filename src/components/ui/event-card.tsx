@@ -34,7 +34,7 @@ const EventCard: React.FC<Props> = ({ data }) => {
         const colors: { [key: string]: string } = {
             music: 'bg-purple-500/20 text-purple-400 border border-purple-500/20',
             sports: 'bg-blue-500/20 text-blue-400 border border-blue-500/20',
-            tech: 'bg-green-500/20 text-green-400 border border-green-500/20',
+            tech: 'bg-amber-500/20 text-amber-400 border border-amber-500/20',
             arts: 'bg-pink-500/20 text-pink-400 border border-pink-500/20',
         };
         return colors[category.toLowerCase()] || 'bg-muted text-muted-foreground border border-border';
@@ -60,7 +60,7 @@ const EventCard: React.FC<Props> = ({ data }) => {
                         <span className={`px-3 py-1 rounded-full text-sm font-medium ${getCategoryColor(data.category)}`}>
                             {data.category}
                         </span>
-                        <span className="px-3 py-1 bg-[#24AE7C] text-white rounded-full text-sm font-medium">
+                        <span className="px-3 py-1 bg-[#F59E0B] text-white rounded-full text-sm font-medium">
                             £{data.price}
                         </span>
                     </div>
@@ -69,11 +69,11 @@ const EventCard: React.FC<Props> = ({ data }) => {
 
                     <div className="flex flex-wrap gap-4 text-muted-foreground text-sm mb-4">
                         <div className="flex items-center gap-1">
-                            <IoLocationSharp className="text-[#24AE7C]" />
+                            <IoLocationSharp className="text-[#F59E0B]" />
                             <span>{data.city}</span>
                         </div>
                         <div className="flex items-center gap-1">
-                            <BsCalendarDate className="text-[#24AE7C]" />
+                            <BsCalendarDate className="text-[#F59E0B]" />
                             <span>{new Date(data.date).toLocaleDateString()}</span>
                         </div>
                     </div>
@@ -81,18 +81,18 @@ const EventCard: React.FC<Props> = ({ data }) => {
                     <div className="flex flex-wrap items-center justify-between mt-4 pt-4 border-t">
                         <div className="flex gap-4">
                             <div className="flex items-center gap-2">
-                                <BsFillPeopleFill className="text-[#24AE7C]" />
+                                <BsFillPeopleFill className="text-[#F59E0B]" />
                                 <span>{data.bookedSeats} attending</span>
                             </div>
                             <div className="flex items-center gap-2">
-                                <IoTicket className="text-[#24AE7C]" />
+                                <IoTicket className="text-[#F59E0B]" />
                                 <span>{data.availableSeats - data.bookedSeats} seats left</span>
                             </div>
                         </div>
 
                         <Link
                             href={`/events/edit/${data._id}`}
-                            className="inline-flex items-center px-4 py-2 bg-[#24AE7C] hover:bg-[#329c75] text-white font-medium rounded-lg transition-colors duration-200"
+                            className="inline-flex items-center px-4 py-2 bg-[#F59E0B] hover:bg-[#D97706] text-white font-medium rounded-lg transition-colors duration-200"
                         >
                             Edit Event
                         </Link>

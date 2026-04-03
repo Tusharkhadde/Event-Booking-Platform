@@ -77,7 +77,7 @@ const EventCard: React.FC<Props> = ({ data }) => {
                         </div>
 
                         <div className="flex items-center gap-2 text-foreground">
-                            <FaTicketAlt className="text-[#24AE7C]" />
+                            <FaTicketAlt className="text-[#F59E0B]" />
                             <span className="font-bold">
                                 {formatPrice(data.price)}
                             </span>

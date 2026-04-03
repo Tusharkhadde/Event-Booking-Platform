@@ -1,4 +1,4 @@
-"use client";
+﻿"use client";
 import { useEffect, useState } from "react";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
@@ -163,7 +163,7 @@ export default function EditEventPage({ params }: { params: { id: string } }) {
     if (isLoading) {
         return (
             <div className="h-screen w-screen flex justify-center items-center">
-                <Loader2 className="h-8 w-8 animate-spin text-[#24AE7C]" />
+                <Loader2 className="h-8 w-8 animate-spin text-[#F59E0B]" />
             </div>
         );
     }
@@ -250,7 +250,7 @@ export default function EditEventPage({ params }: { params: { id: string } }) {
                                     <textarea
                                         value={description}
                                         onChange={(e) => setDescription(e.target.value)}
-                                        className="mt-1 w-full rounded-md border border-border bg-background text-foreground p-3 focus:ring-2 focus:ring-[#24AE7C] focus:border-transparent"
+                                        className="mt-1 w-full rounded-md border border-border bg-background text-foreground p-3 focus:ring-2 focus:ring-[#F59E0B] focus:border-transparent"
                                         rows={4}
                                         maxLength={250}
                                         required
@@ -347,7 +347,7 @@ export default function EditEventPage({ params }: { params: { id: string } }) {
                                     <label className="text-sm font-medium text-gray-700">
                                         Event Image
                                     </label>
-                                    <div className="mt-1 flex justify-center px-6 pt-5 pb-6 border-2 border-border border-dashed rounded-lg hover:border-[#24AE7C] transition-colors duration-200">
+                                    <div className="mt-1 flex justify-center px-6 pt-5 pb-6 border-2 border-border border-dashed rounded-lg hover:border-[#F59E0B] transition-colors duration-200">
                                         <div className="space-y-1 text-center">
                                             {imagePreview || eventData?.imageUrl ? (
                                                 <div className="relative w-full h-40 mb-4">
@@ -374,7 +374,7 @@ export default function EditEventPage({ params }: { params: { id: string } }) {
                                                 </svg>
                                             )}
                                             <div className="flex text-sm text-muted-foreground">
-                                                <label className="relative cursor-pointer bg-white rounded-md font-medium text-[#24AE7C] hover:text-[#1d8b63] focus-within:outline-none focus-within:ring-2 focus-within:ring-offset-2 focus-within:ring-[#24AE7C]">
+                                                <label className="relative cursor-pointer bg-white rounded-md font-medium text-[#F59E0B] hover:text-[#D97706] focus-within:outline-none focus-within:ring-2 focus-within:ring-offset-2 focus-within:ring-[#F59E0B]">
                                                     <span>Upload a file</span>
                                                     <input
                                                         type="file"
@@ -404,7 +404,7 @@ export default function EditEventPage({ params }: { params: { id: string } }) {
                             </Button>
                             <Button
                                 type="submit"
-                                className="bg-[#24AE7C] hover:bg-[#1d8b63]"
+                                className="bg-[#F59E0B] hover:bg-[#D97706]"
                                 disabled={isSaving}
                             >
                                 {isSaving ? (

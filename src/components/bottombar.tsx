@@ -117,7 +117,7 @@ const BottomBar: React.FC<Props> = ({ price = 0, eventId }) => {
                     <Tooltip>
                         <TooltipTrigger>
                             <DialogTrigger asChild>
-                                <Button className='bg-[#24AE7C] hover:bg-[#329c75] text-white scale-110' disabled={status !== "authenticated"}>{price === 0 ? "Get Ticket" : "Purchase Ticket"}</Button>
+                                <Button className='bg-[#F59E0B] hover:bg-[#D97706] text-white scale-110' disabled={status !== "authenticated"}>{price === 0 ? "Get Ticket" : "Purchase Ticket"}</Button>
                             </DialogTrigger>
 
                         </TooltipTrigger>
@@ -132,11 +132,11 @@ const BottomBar: React.FC<Props> = ({ price = 0, eventId }) => {
                         <DialogTitle className='font-bold text-2xl'>{event?.title}</DialogTitle>
                         <DialogDescription className='flex flex-col gap-2'>
                             <div className='flex flex-row gap-2 items-center'>
-                                <IoLocationOutline className="text-[#24AE7C]" />
+                                <IoLocationOutline className="text-[#F59E0B]" />
                                 {event?.address}
                             </div>
                             <div className='flex flex-row gap-2 items-center'>
-                                <FaRegCalendar className="text-[#24AE7C]" />
+                                <FaRegCalendar className="text-[#F59E0B]" />
                                 {event && new Date(event?.date).toLocaleDateString('en-US', {
                                     weekday: 'long',
                                     month: 'short',
@@ -144,7 +144,7 @@ const BottomBar: React.FC<Props> = ({ price = 0, eventId }) => {
                                 })}
                             </div>
                             <div className='flex flex-row gap-2 items-center'>
-                                <FaRegClock className="text-[#24AE7C]" />
+                                <FaRegClock className="text-[#F59E0B]" />
                                 {event && new Date(event?.date).toLocaleTimeString('en-US', {
                                     hour: 'numeric',
                                     minute: '2-digit',
@@ -157,7 +157,7 @@ const BottomBar: React.FC<Props> = ({ price = 0, eventId }) => {
                     <div className='w-full h-full flex justify-between py-4 shadow-xl p-2'>
                         <div className='flex flex-col justify-center'>
                             <p className='text-sm font-semibold'>{event?.title}</p>
-                            <p className='font-bold text-[#24AE7C]'>{price === 0 ? "FREE" : `$${price}`}</p>
+                            <p className='font-bold text-[#F59E0B]'>{price === 0 ? "FREE" : `$${price}`}</p>
                         </div>
                         <div className='flex flex-row gap-2 items-center'>
                             <Button
@@ -188,7 +188,7 @@ const BottomBar: React.FC<Props> = ({ price = 0, eventId }) => {
                             </div>
 
                             <DialogTrigger asChild className='h-full'>
-                                <Button type="submit" onClick={handleCheckout} disabled={ticketsToBuy === 0} className='h-full bg-[#24AE7C] hover:bg-[#329c75]'>Continue</Button>
+                                <Button type="submit" onClick={handleCheckout} disabled={ticketsToBuy === 0} className='h-full bg-[#F59E0B] hover:bg-[#D97706]'>Continue</Button>
                             </DialogTrigger>
                         </div>
                     </DialogFooter>

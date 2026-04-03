@@ -3,6 +3,7 @@ import Image from 'next/image';
 import React, { useEffect, useState } from 'react';
 import { Button, buttonVariants } from './ui/button';
 import { FaCalendarMinus, FaBars, FaTimes } from "react-icons/fa";
+import { Ticket, Sparkles } from 'lucide-react';
 import Link from 'next/link';
 import { cn } from '@/lib/utils';
 import { Separator } from './ui/separator';
@@ -100,7 +101,7 @@ const Navbar: React.FC<Props> = ({ background = true, className }) => {
                     <motion.div
                         whileHover={{ scale: 1.05 }}
                         transition={{ type: "spring", stiffness: 400, damping: 10 }}
-                        className="bg-gradient-to-br from-[#24AE7C] to-[#1d8b63] p-[2px] rounded-2xl"
+                        className="bg-gradient-to-br from-[#F59E0B] to-[#D97706] p-[2px] rounded-2xl"
                     >
                         <Image
                             src="/images/logo.webp"
@@ -121,10 +122,28 @@ const Navbar: React.FC<Props> = ({ background = true, className }) => {
                 
                 <Separator orientation='vertical' className='hidden md:block bg-white/20 h-5' />
                 
-                <div className='hidden md:flex gap-1'>
+                <div className='hidden md:flex gap-1 items-center'>
                     <NavLink href="/explore" className={linkClassName}>
                         Explore Events
                     </NavLink>
+                    {session && status === "authenticated" && (
+                        <>
+                            <NavLink
+                                href="/bookings"
+                                className={cn(linkClassName, "flex items-center gap-1.5")}
+                            >
+                                <Ticket className="w-3.5 h-3.5" />
+                                My Bookings
+                            </NavLink>
+                            <NavLink
+                                href="/bookings"
+                                className={cn(linkClassName, "flex items-center gap-1.5")}
+                            >
+                                <Sparkles className="w-3.5 h-3.5 text-amber-400" />
+                                Recommendations
+                            </NavLink>
+                        </>
+                    )}
                 </div>
             </div>
 
@@ -199,7 +218,7 @@ const UserMenu = ({ session, userBalance, handleSignOut, background, isScrolled 
                 </div>
                 <Avatar className='w-8 h-8 border border-white/20'>
                     <AvatarImage src={`/uploads/${session.user.profilePicture}`} />
-                    <AvatarFallback className="text-white bg-gradient-to-br from-[#24AE7C] to-[#1d8b63]">
+                    <AvatarFallback className="text-white bg-gradient-to-br from-[#F59E0B] to-[#D97706]">
                         {session.user.username.slice(0, 2).toUpperCase()}
                     </AvatarFallback>
                 </Avatar>
@@ -220,6 +239,16 @@ const UserMenu = ({ session, userBalance, handleSignOut, background, isScrolled 
             </NavLink>
             <NavLink href="/events">
                 <DropdownMenuItem className='hover:cursor-pointer hover:bg-white/10 focus:bg-white/10'>My Events</DropdownMenuItem>
+            </NavLink>
+            <NavLink href="/bookings">
+                <DropdownMenuItem className='hover:cursor-pointer hover:bg-white/10 focus:bg-white/10 flex items-center gap-2'>
+                    <Ticket className="w-3.5 h-3.5" /> My Bookings
+                </DropdownMenuItem>
+            </NavLink>
+            <NavLink href="/bookings">
+                <DropdownMenuItem className='hover:cursor-pointer hover:bg-white/10 focus:bg-white/10 flex items-center gap-2'>
+                    <Sparkles className="w-3.5 h-3.5 text-amber-400" /> Options For You
+                </DropdownMenuItem>
             </NavLink>
             <DropdownMenuSeparator className="bg-white/10" />
             <DropdownMenuItem
@@ -255,7 +284,7 @@ const AuthLinks = ({ background, isScrolled }: {
 const CreateEventButton = () => (
     <NavLink
         href="/events/new"
-        className="flex items-center gap-2 text-sm font-bold bg-gradient-to-r from-[#24AE7C] to-[#1d8b63] hover:from-[#329c75] hover:to-[#24AE7C] text-white px-5 py-2.5 rounded-full transition-all duration-300 shadow-[0_0_20px_rgba(36,174,124,0.3)] hover:shadow-[0_0_25px_rgba(36,174,124,0.5)] transform hover:-translate-y-0.5"
+        className="flex items-center gap-2 text-sm font-bold bg-gradient-to-r from-[#F59E0B] to-[#D97706] hover:from-[#D97706] hover:to-[#F59E0B] text-white px-5 py-2.5 rounded-full transition-all duration-300 shadow-[0_0_20px_rgba(245,158,11,0.3)] hover:shadow-[0_0_25px_rgba(245,158,11,0.5)] transform hover:-translate-y-0.5"
     >
         <FaCalendarMinus size={16} />
         <span>Create Event</span>
@@ -272,7 +301,7 @@ const MobileMenuContent = ({ session, status, handleSignOut, toggleMenu }: {
         <CreateEventButton />
         <NavLink
             href="/explore"
-            className="text-foreground hover:text-[#329c75] transition-all"
+            className="text-foreground hover:text-[#D97706] transition-all"
             onClick={toggleMenu}
         >
             Explore events
@@ -281,10 +310,17 @@ const MobileMenuContent = ({ session, status, handleSignOut, toggleMenu }: {
             <div className='flex flex-col items-center gap-4'>
                 <NavLink
                     href={`/profile/${session.user.id}`}
-                    className="text-foreground hover:text-[#329c75] transition-all"
+                    className="text-foreground hover:text-[#D97706] transition-all"
                     onClick={toggleMenu}
                 >
                     Your profile
+                </NavLink>
+                <NavLink
+                    href="/bookings"
+                    className="flex items-center gap-2 text-foreground hover:text-[#D97706] transition-all"
+                    onClick={toggleMenu}
+                >
+                    <Ticket className="w-4 h-4" /> My Bookings
                 </NavLink>
                 <Button
                     variant="destructive"
@@ -298,14 +334,14 @@ const MobileMenuContent = ({ session, status, handleSignOut, toggleMenu }: {
             <div className='flex flex-col items-center gap-4'>
                 <NavLink
                     href="/login"
-                    className="text-foreground hover:text-[#329c75] transition-all"
+                    className="text-foreground hover:text-[#D97706] transition-all"
                     onClick={toggleMenu}
                 >
                     Sign in
                 </NavLink>
                 <NavLink
                     href="/register"
-                    className="text-foreground hover:text-[#329c75] transition-all"
+                    className="text-foreground hover:text-[#D97706] transition-all"
                     onClick={toggleMenu}
                 >
                     Create an account
