@@ -16,7 +16,7 @@ const SuccessPage = () => {
         <div className="min-h-screen bg-background flex flex-col justify-center -mt-20 items-center">
             <Navbar className="fixed w-full z-50" />
             <div className="flex flex-col items-center justify-center w-full h-full pt-16 px-4">
-                <div className="flex items-center justify-center w-20 h-20 bg-green-500/20 rounded-full mb-6 shadow-md border border-green-500/20">
+                <div className="flex items-center justify-center w-20 h-20 bg-amber-500/20 rounded-full mb-6 shadow-md border border-amber-500/20">
                     <svg
                         xmlns="http://www.w3.org/2000/svg"
                         className="h-12 w-12 text-green-600"
@@ -39,7 +39,7 @@ const SuccessPage = () => {
                 </p>
 
                 <Button
-                    className="px-8 py-3 bg-[#24AE7C] hover:bg-[#329c75] text-white font-medium text-lg rounded-lg shadow-lg transition duration-200"
+                    className="px-8 py-3 bg-[#F59E0B] hover:bg-[#D97706] text-white font-medium text-lg rounded-lg shadow-lg transition duration-200"
                     onClick={handleGoBack}
                 >
                     Go to Home
