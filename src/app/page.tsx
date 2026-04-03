@@ -1,15 +1,13 @@
 "use client";
 
-import { buttonVariants } from "@/components/ui/button";
-import { motion } from "framer-motion";
+import { motion, AnimatePresence } from "framer-motion";
 import Image from "next/image";
-import { cn } from "@/lib/utils";
 import Link from "next/link";
 import Navbar from "@/components/navbar";
 import { QuoteIcon } from "lucide-react";
 import { MdEventAvailable, MdSecurity, MdSupportAgent } from "react-icons/md";
 import { BackgroundPaths } from "@/components/ui/background-paths";
-import { LaserPrecision } from "@/components/ui/laser-precision";
+import { useEffect, useState, useCallback } from "react";
 
 interface Feature {
   icon: React.ReactNode;
@@ -25,17 +23,17 @@ interface Testimonial {
 
 const features: Feature[] = [
   {
-    icon: <MdEventAvailable className="w-12 h-12 text-[#24AE7C]" />,
+    icon: <MdEventAvailable className="w-12 h-12 text-[#F59E0B]" />,
     title: "Easy to Use",
     description: "Intuitive interface for creating and managing events effortlessly."
   },
   {
-    icon: <MdSecurity className="w-12 h-12 text-[#24AE7C]" />,
+    icon: <MdSecurity className="w-12 h-12 text-[#F59E0B]" />,
     title: "Secure Payments",
     description: "Trusted by thousands for seamless and secure transactions."
   },
   {
-    icon: <MdSupportAgent className="w-12 h-12 text-[#24AE7C]" />,
+    icon: <MdSupportAgent className="w-12 h-12 text-[#F59E0B]" />,
     title: "24/7 Support",
     description: "Dedicated support team available to assist you anytime."
   }
@@ -60,53 +58,172 @@ const testimonials: Testimonial[] = [
 ];
 
 export default function HomePage() {
+  const heroSlides = [
+    {
+      src: "/images/hero_event_bg.png",
+      label: "Luxury Event Venues",
+      tag: "✨ India's #1 Event Booking Platform",
+    },
+    {
+      src: "/images/hero_event_bg2.png",
+      label: "Music Festivals",
+      tag: "🎵 Book Music Festivals & Concerts",
+    },
+    {
+      src: "/images/hero_event_bg3.png",
+      label: "Business Conferences",
+      tag: "💼 Corporate Conferences & Summits",
+    },
+    {
+      src: "/images/hero_event_bg4.png",
+      label: "Weddings & Celebrations",
+      tag: "💍 Weddings, Galas & Private Events",
+    },
+  ];
+
+  const [activeSlide, setActiveSlide] = useState(0);
+
+  const goToSlide = useCallback((index: number) => {
+    setActiveSlide(index);
+  }, []);
+
+  useEffect(() => {
+    const timer = setInterval(() => {
+      setActiveSlide((prev) => (prev + 1) % heroSlides.length);
+    }, 5000);
+    return () => clearInterval(timer);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
+
   return (
     <>
+
 
       <div className="relative w-full min-h-screen">
         <Navbar background={false} />
 
-        <div className="relative h-[800px] flex items-center overflow-hidden bg-[#2a2f2b]">
-          <div className="absolute inset-0 z-0">
-            <LaserPrecision className="w-full h-full opacity-70 mix-blend-screen" heroCenterX={0.7} heroCenterY={0.5} heroScale={0.85} />
-            <div className="absolute inset-0 bg-gradient-to-r from-[#2a2f2b] via-[#2a2f2b]/60 to-transparent pointer-events-none"></div>
-          </div>
+        {/* ── HERO SLIDER ── */}
+        <div className="relative h-[800px] flex items-center overflow-hidden">
 
-          <div className="relative z-10 container mx-auto px-6 md:px-12 flex flex-col justify-center h-full">
+          {/* Slide Images — Crossfade */}
+          <AnimatePresence initial={false}>
+            {heroSlides.map((slide, i) =>
+              i === activeSlide ? (
+                <motion.div
+                  key={slide.src}
+                  className="absolute inset-0 z-0"
+                  initial={{ opacity: 0 }}
+                  animate={{ opacity: 1 }}
+                  exit={{ opacity: 0 }}
+                  transition={{ duration: 1, ease: "easeInOut" }}
+                >
+                  <Image
+                    src={slide.src}
+                    alt={slide.label}
+                    fill
+                    priority={i === 0}
+                    className="object-cover object-center"
+                  />
+                  {/* Cinematic dark overlay */}
+                  <div className="absolute inset-0 bg-gradient-to-r from-black/85 via-black/55 to-black/25 pointer-events-none" />
+                  {/* Bottom fade */}
+                  <div className="absolute bottom-0 left-0 right-0 h-32 bg-gradient-to-t from-background to-transparent pointer-events-none" />
+                </motion.div>
+              ) : null
+            )}
+          </AnimatePresence>
+
+          {/* Hero Content */}
+          <div className="relative z-10 container mx-auto px-6 md:px-16 flex flex-col justify-center h-full">
             <div className="max-w-2xl space-y-6">
-              <h1 className="text-5xl sm:text-6xl md:text-7xl font-semibold tracking-tight text-white drop-shadow-md leading-tight">
-                Your next big event starts here
+
+              {/* Animated slide label badge */}
+              <AnimatePresence mode="wait">
+                <motion.div
+                  key={activeSlide + "-badge"}
+                  initial={{ opacity: 0, y: 10 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  exit={{ opacity: 0, y: -10 }}
+                  transition={{ duration: 0.4 }}
+                  className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full border border-[#F59E0B]/30 bg-[#F59E0B]/10 backdrop-blur-sm w-fit"
+                >
+                  <span className="w-2 h-2 rounded-full bg-[#F59E0B] animate-pulse" />
+                  <span className="text-[#F59E0B] text-sm font-semibold tracking-wide">
+                    {heroSlides[activeSlide].tag}
+                  </span>
+                </motion.div>
+              </AnimatePresence>
+
+              {/* Main Heading */}
+              <h1 className="hero-slide-in font-heading text-5xl sm:text-6xl md:text-7xl font-bold tracking-tight text-white leading-tight">
+                Book Your{" "}
+                <span className="text-glow-gold block sm:inline">
+                  Perfect Event
+                </span>
               </h1>
-              
-              <p className="text-[#a0a8a3] text-lg sm:text-2xl max-w-lg font-medium animate-fade-in drop-shadow-sm leading-relaxed" style={{ animationDelay: "0.2s" }}>
-                A beautiful platform to discover, book, and manage unforgettable experiences.
+
+              {/* Sub-heading */}
+              <p className="hero-slide-in text-gray-300 text-lg sm:text-xl max-w-lg leading-relaxed" style={{ animationDelay: "0.3s" }}>
+                Discover and book unforgettable concerts, conferences, weddings
+                &amp; more — all in one place.
               </p>
 
-              <div className="flex animate-fade-in pt-4" style={{ animationDelay: "0.4s" }}>
+              {/* CTAs */}
+              <div className="hero-slide-in flex flex-col sm:flex-row gap-4 pt-2" style={{ animationDelay: "0.45s" }}>
+                <Link
+                  href="/explore"
+                  className="flex items-center justify-center gap-2 bg-[#F59E0B] hover:bg-[#D97706] text-black px-8 h-[54px] text-base font-bold rounded-xl transition-all duration-300 shadow-[0_0_24px_rgba(245,158,11,0.4)] hover:shadow-[0_0_32px_rgba(245,158,11,0.6)] hover:-translate-y-0.5"
+                >
+                  🎟️ Explore Events
+                </Link>
                 <Link
                   href="/events/new"
-                  className={cn(
-                    buttonVariants({ size: "lg" }),
-                    "bg-[#d29f76] hover:bg-[#b8855a] text-black px-8 h-[52px] text-lg font-medium rounded-md transition-all duration-300 shadow-lg border border-[#e6b185]/20"
-                  )}
+                  className="flex items-center justify-center gap-2 border border-white/30 hover:border-[#F59E0B]/60 text-white hover:text-[#F59E0B] bg-white/5 hover:bg-[#F59E0B]/10 backdrop-blur-sm px-8 h-[54px] text-base font-semibold rounded-xl transition-all duration-300"
                 >
-                  Get Started
+                  ✨ Create an Event
                 </Link>
               </div>
             </div>
           </div>
-          
-          <div className="absolute bottom-10 right-10 z-20 hidden md:block animate-fade-in" style={{ animationDelay: "1s" }}>
-            <div className="px-5 py-2.5 bg-black/60 border border-white/5 rounded-md text-xs tracking-[0.2em] text-[#a0a8a3] font-mono shadow-xl backdrop-blur-sm">
-              DRAG TO INTERACT
+
+          {/* ── Dot Indicators (bottom-center) ── */}
+          <div className="absolute bottom-8 left-1/2 -translate-x-1/2 z-20 flex items-center gap-2">
+            {heroSlides.map((_, i) => (
+              <button
+                key={i}
+                onClick={() => goToSlide(i)}
+                aria-label={`Go to slide ${i + 1}`}
+                className={`transition-all duration-500 rounded-full ${
+                  i === activeSlide
+                    ? "w-8 h-2 bg-[#F59E0B]"
+                    : "w-2 h-2 bg-white/40 hover:bg-white/70"
+                }`}
+              />
+            ))}
+          </div>
+
+          {/* ── Stats badge bottom-right ── */}
+          <div className="absolute bottom-10 right-10 z-20 hidden md:flex animate-fade-in" style={{ animationDelay: "1s" }}>
+            <div className="flex items-center gap-3 px-5 py-3 bg-black/60 border border-white/10 rounded-xl backdrop-blur-md shadow-xl">
+              <div className="text-right">
+                <p className="text-white text-xl font-bold">50K+</p>
+                <p className="text-gray-400 text-xs tracking-wide">Events Booked</p>
+              </div>
+              <div className="w-px h-8 bg-white/20" />
+              <div className="text-right">
+                <p className="text-white text-xl font-bold">4.9★</p>
+                <p className="text-gray-400 text-xs tracking-wide">User Rating</p>
+              </div>
             </div>
           </div>
         </div>
 
+
+
         <section className="bg-muted/50 py-24 px-6 sm:px-12">
           <div className="container mx-auto">
             <h2 className="text-3xl sm:text-4xl font-bold text-center mb-12">
-              Why Choose <span className="text-[#24AE7C]">Us?</span>
+              Why Choose <span className="text-[#F59E0B]">Us?</span>
             </h2>
             <div className="grid grid-cols-1 sm:grid-cols-3 gap-12 max-w-6xl mx-auto">
               {features.map((feature, index) => (
@@ -118,7 +235,7 @@ export default function HomePage() {
                   transition={{ delay: index * 0.1 }}
                   className="flex flex-col items-center text-center p-8 bg-background rounded-2xl shadow-lg hover:shadow-2xl transition-all duration-500 group border border-border"
                 >
-                  <div className="mb-6 p-4 bg-muted rounded-2xl group-hover:bg-[#24AE7C]/10 transition-colors duration-500">
+                  <div className="mb-6 p-4 bg-muted rounded-2xl group-hover:bg-[#F59E0B]/10 transition-colors duration-500">
                     <div className="transform group-hover:scale-110 transition-transform duration-500">
                       {feature.icon}
                     </div>
@@ -134,7 +251,7 @@ export default function HomePage() {
         <section className="bg-background py-24 px-6 sm:px-12">
           <div className="container mx-auto">
             <h2 className="text-3xl sm:text-4xl font-bold text-center mb-12">
-              What Our <span className="text-[#24AE7C]">Users Say</span>
+              What Our <span className="text-[#F59E0B]">Users Say</span>
             </h2>
             <div className="grid grid-cols-1 sm:grid-cols-3 gap-8 max-w-6xl mx-auto">
               {testimonials.map((testimonial, index) => (
@@ -152,14 +269,14 @@ export default function HomePage() {
                       alt={`${testimonial.name}'s testimonial`}
                       width={80}
                       height={80}
-                      className="rounded-full border-4 border-[#24AE7C] w-[80px] h-[80px] object-cover"
+                      className="rounded-full border-4 border-[#F59E0B] w-[80px] h-[80px] object-cover"
                     />
-                    <div className="absolute -bottom-2 -right-2 bg-[#24AE7C] rounded-full p-2 shadow-lg">
+                    <div className="absolute -bottom-2 -right-2 bg-[#F59E0B] rounded-full p-2 shadow-lg">
                       <QuoteIcon className="w-4 h-4 text-white" />
                     </div>
                   </div>
                   <p className="text-neutral-600 dark:text-neutral-400 italic mb-4 text-center leading-relaxed">"{testimonial.quote}"</p>
-                  <span className="text-sm font-bold text-[#24AE7C] uppercase tracking-wider">{testimonial.name}</span>
+                  <span className="text-sm font-bold text-[#F59E0B] uppercase tracking-wider">{testimonial.name}</span>
                 </motion.div>
               ))}
             </div>
@@ -178,7 +295,7 @@ export default function HomePage() {
               transition={{ duration: 0.5 }}
             >
               <h2 className="text-4xl sm:text-6xl font-bold text-white mb-8 tracking-tighter">
-                Ready to Start Your <span className="text-[#24AE7C]">Event Journey?</span>
+                Ready to Start Your <span className="text-[#F59E0B]">Event Journey?</span>
               </h2>
               <p className="text-neutral-400 text-lg sm:text-xl mb-12 max-w-2xl mx-auto leading-relaxed">
                 Join thousands of successful organizers who trust our platform for their most important events.
@@ -186,19 +303,13 @@ export default function HomePage() {
               <div className="flex flex-col sm:flex-row justify-center gap-6">
                 <Link
                   href="/events/new"
-                  className={cn(
-                    buttonVariants({ size: "lg" }),
-                    "bg-[#24AE7C] hover:bg-[#329c75] text-white px-12 h-[64px] text-xl rounded-2xl transition-all duration-300 shadow-xl hover:shadow-[#24AE7C]/30 hover:-translate-y-1"
-                  )}
+                  className="inline-flex items-center justify-center bg-[#ffc83c] hover:bg-[#ffb300] text-black px-12 h-[64px] text-xl font-bold rounded-2xl transition-all duration-300 shadow-xl hover:shadow-[rgba(255,200,60,0.4)] hover:-translate-y-1"
                 >
                   Get Started Free
                 </Link>
                 <Link
                   href="/contact"
-                  className={cn(
-                    buttonVariants({ size: "lg", variant: "outline" }),
-                    "border-white/20 text-white hover:bg-white/5 px-12 h-[64px] text-xl rounded-2xl transition-all duration-300"
-                  )}
+                  className="inline-flex items-center justify-center border border-white/20 text-white hover:bg-white/5 px-12 h-[64px] text-xl font-semibold rounded-2xl transition-all duration-300"
                 >
                   Contact Sales
                 </Link>

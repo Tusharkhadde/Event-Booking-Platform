@@ -1,6 +1,6 @@
 "use client";
 
-import { Suspense } from 'react';
+import { Suspense, useState, useEffect } from 'react';
 import Navbar from "@/components/navbar";
 import { Input } from "@/components/ui/input";
 import Image from "next/image";
@@ -8,14 +8,19 @@ import { IoLocationOutline } from "react-icons/io5";
 import { FaSearch } from "react-icons/fa";
 import { Button } from "@/components/ui/button";
 import { useRouter, useSearchParams } from "next/navigation";
-import { useState } from "react";
 import Events from "@/components/events";
 import Filter from '@/components/ui/filter-card';
 import { DateRange } from 'react-day-picker';
-import { motion } from "framer-motion";
+import { motion, AnimatePresence } from "framer-motion";
 import { Skeleton } from "@/components/ui/skeleton";
 import debounce from 'debounce';
-import { AuroraCurtain } from "@/components/ui/aurora-curtain";
+
+const EXPLORE_SLIDES = [
+  { src: "/images/hero_event_bg2.png", label: "Music Festivals" },
+  { src: "/images/hero_event_bg.png",  label: "Luxury Venues" },
+  { src: "/images/hero_event_bg3.png", label: "Conferences" },
+  { src: "/images/hero_event_bg4.png", label: "Weddings & Galas" },
+];
 
 const SearchBar = ({ onSearch }: { onSearch: (location: string, event: string) => void }) => {
     const [location, setLocation] = useState('');
@@ -57,7 +62,7 @@ const SearchBar = ({ onSearch }: { onSearch: (location: string, event: string) =
                 />
             </div>
             <Button
-                className="w-full sm:w-auto h-12 bg-[#c8956c] hover:bg-[#b5825a] text-black px-8 rounded-xl font-semibold text-base transition-colors shadow-lg shadow-[#c8956c]/20"
+                className="w-full sm:w-auto h-12 bg-[#F59E0B] hover:bg-[#D97706] text-black px-8 rounded-xl font-bold text-base transition-colors shadow-lg shadow-[#F59E0B]/20"
                 onClick={() => onSearch(location, eventName)}
             >
                 Search
@@ -110,6 +115,14 @@ const SearchParamsHandler = () => {
 
 export default function EventsPage() {
     const router = useRouter();
+    const [activeSlide, setActiveSlide] = useState(0);
+
+    useEffect(() => {
+        const timer = setInterval(() => {
+            setActiveSlide((prev) => (prev + 1) % EXPLORE_SLIDES.length);
+        }, 4000);
+        return () => clearInterval(timer);
+    }, []);
 
     const handleSearch = (location: string, event: string) => {
         const query: Record<string, string> = {};
@@ -125,31 +138,74 @@ export default function EventsPage() {
             <div className="min-h-screen bg-background text-foreground">
                 <Navbar className="fixed top-0 w-full z-50" />
 
+                {/* ── Auto-Sliding Hero ── */}
                 <div className="relative h-[450px] md:h-[550px] overflow-hidden">
-                    <AuroraCurtain className="absolute inset-0 w-full h-full" />
-                    
-                    <div className="absolute inset-0 bg-gradient-to-b from-black/40 via-transparent to-background pointer-events-none" />
 
-                    <div className="absolute inset-0 flex flex-col items-center justify-center px-4 pt-16 z-10 pointer-events-none">
-                        <motion.h1
-                            initial={{ opacity: 0, y: -20 }}
-                            animate={{ opacity: 1, y: 0 }}
-                            className="text-white text-4xl md:text-6xl font-bold text-center mb-4 tracking-tight drop-shadow-lg"
+                  {/* Crossfade slides */}
+                  <AnimatePresence initial={false}>
+                    {EXPLORE_SLIDES.map((slide, i) =>
+                      i === activeSlide ? (
+                        <motion.div
+                          key={slide.src}
+                          className="absolute inset-0"
+                          initial={{ opacity: 0 }}
+                          animate={{ opacity: 1 }}
+                          exit={{ opacity: 0 }}
+                          transition={{ duration: 1, ease: "easeInOut" }}
                         >
-                            Discover events for all the things you love!
-                        </motion.h1>
-                        <motion.p
-                            initial={{ opacity: 0 }}
-                            animate={{ opacity: 1 }}
-                            transition={{ delay: 0.2 }}
-                            className="text-white/80 text-lg md:text-xl text-center mb-10 max-w-2xl drop-shadow-md"
-                        >
-                            Search amazing events, from local meetups to massive festivals.
-                        </motion.p>
-                        <div className="w-full max-w-4xl pointer-events-auto">
-                            <SearchBar onSearch={handleSearch} />
-                        </div>
-                    </div>
+                          <Image
+                            src={slide.src}
+                            alt={slide.label}
+                            fill
+                            priority={i === 0}
+                            className="object-cover object-center"
+                          />
+                        </motion.div>
+                      ) : null
+                    )}
+                  </AnimatePresence>
+
+                  {/* Overlays */}
+                  <div className="absolute inset-0 bg-gradient-to-b from-black/60 via-black/40 to-background pointer-events-none z-10" />
+
+                  {/* Content */}
+                  <div className="absolute inset-0 flex flex-col items-center justify-center px-4 pt-16 z-20 pointer-events-none">
+                      <motion.h1
+                          initial={{ opacity: 0, y: -20 }}
+                          animate={{ opacity: 1, y: 0 }}
+                          className="font-heading text-white text-4xl md:text-6xl font-bold text-center mb-4 tracking-tight drop-shadow-lg"
+                      >
+                          Discover events for all the{" "}
+                          <span className="text-[#F59E0B]">things you love!</span>
+                      </motion.h1>
+                      <motion.p
+                          initial={{ opacity: 0 }}
+                          animate={{ opacity: 1 }}
+                          transition={{ delay: 0.2 }}
+                          className="text-white/80 text-lg md:text-xl text-center mb-10 max-w-2xl drop-shadow-md"
+                      >
+                          Search amazing events, from local meetups to massive festivals.
+                      </motion.p>
+                      <div className="w-full max-w-4xl pointer-events-auto">
+                          <SearchBar onSearch={handleSearch} />
+                      </div>
+                  </div>
+
+                  {/* Dot indicators */}
+                  <div className="absolute bottom-5 left-1/2 -translate-x-1/2 z-20 flex items-center gap-2">
+                    {EXPLORE_SLIDES.map((_, i) => (
+                      <button
+                        key={i}
+                        onClick={() => setActiveSlide(i)}
+                        aria-label={`Go to slide ${i + 1}`}
+                        className={`transition-all duration-500 rounded-full ${
+                          i === activeSlide
+                            ? "w-8 h-2 bg-[#F59E0B]"
+                            : "w-2 h-2 bg-white/40 hover:bg-white/70"
+                        }`}
+                      />
+                    ))}
+                  </div>
                 </div>
 
                 <div className="max-w-7xl sm:mx-10 mx-auto lg:mx-40 px-4 py-8">
@@ -170,3 +226,4 @@ export default function EventsPage() {
         </Suspense>
     );
 }
+

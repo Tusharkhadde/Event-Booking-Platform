@@ -1,26 +1,27 @@
 import type { Metadata } from "next";
-import localFont from "next/font/local";
+import { Inter, Syne } from "next/font/google";
 import "./globals.css";
 import AuthProvider from "@/components/session-provider";
 import { Toaster } from "react-hot-toast";
+import { ThemeProvider } from "@/components/theme-provider";
 
-const geistSans = localFont({
-  src: "./fonts/GeistVF.woff",
-  variable: "--font-geist-sans",
-  weight: "100 900",
+const inter = Inter({
+  subsets: ["latin"],
+  variable: "--font-inter",
+  display: "swap",
 });
-const geistMono = localFont({
-  src: "./fonts/GeistMonoVF.woff",
-  variable: "--font-geist-mono",
-  weight: "100 900",
+
+const syne = Syne({
+  subsets: ["latin"],
+  variable: "--font-syne",
+  weight: ["400", "600", "700", "800"],
+  display: "swap",
 });
 
 export const metadata: Metadata = {
-  title: "Aura - Simple Event Management Platform",
-  description: "Create and manage your events easily with Aura. Start selling tickets in minutes!",
+  title: "Aura — Discover & Book Amazing Events",
+  description: "Find, book, and manage unforgettable events — concerts, conferences, workshops & more. Join thousands on Aura.",
 };
-
-import { ThemeProvider } from "@/components/theme-provider";
 
 export default function RootLayout({
   children,
@@ -30,7 +31,7 @@ export default function RootLayout({
   return (
     <html lang="en" suppressHydrationWarning>
       <body
-        className={`${geistSans.variable} ${geistMono.variable} h-screen max-h-screen w-screen max-w-screen overflow-x-hidden`}
+        className={`${inter.variable} ${syne.variable} font-sans h-screen max-h-screen w-screen max-w-screen overflow-x-hidden`}
       >
         <ThemeProvider
           attribute="class"
@@ -44,6 +45,6 @@ export default function RootLayout({
           </AuthProvider>
         </ThemeProvider>
       </body>
-    </html >
+    </html>
   );
-}
+}

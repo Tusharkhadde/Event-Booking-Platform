@@ -1,4 +1,4 @@
-"use client";
+﻿"use client";
 import { useEffect, useRef, useState } from "react";
 import Image from "next/image";
 import { FaRegClock, FaRegCalendar, FaShare, FaStar, FaRegStar } from 'react-icons/fa';
@@ -346,11 +346,11 @@ export default function EventPage({ params }: { params: { id: string } }) {
                                         <Card>
                                             <CardContent className="p-4 space-y-4">
                                                 <div className="flex items-center gap-3">
-                                                    <IoLocationOutline className="text-[#24AE7C] w-5 h-5" />
+                                                    <IoLocationOutline className="text-[#F59E0B] w-5 h-5" />
                                                     <p className="text-muted-foreground">{event.address}</p>
                                                 </div>
                                                 <div className="flex items-center gap-3">
-                                                    <FaRegCalendar className="text-[#24AE7C] w-5 h-5" />
+                                                    <FaRegCalendar className="text-[#F59E0B] w-5 h-5" />
                                                     <p className="text-muted-foreground">
                                                         {new Date(event.date).toLocaleDateString('en-US', {
                                                             weekday: 'long',
@@ -361,7 +361,7 @@ export default function EventPage({ params }: { params: { id: string } }) {
                                                     </p>
                                                 </div>
                                                 <div className="flex items-center gap-3">
-                                                    <FaRegClock className="text-[#24AE7C] w-5 h-5" />
+                                                    <FaRegClock className="text-[#F59E0B] w-5 h-5" />
                                                     <p className="text-muted-foreground">
                                                         {new Date(event.date).toLocaleTimeString('en-US', {
                                                             hour: 'numeric',
@@ -405,7 +405,7 @@ export default function EventPage({ params }: { params: { id: string } }) {
                                                         })()}
                                                     </div>
                                                     <Button 
-                                                        className="w-full bg-[#24AE7C] hover:bg-[#329c75] text-white gap-2"
+                                                        className="w-full bg-[#F59E0B] hover:bg-[#D97706] text-white gap-2"
                                                         onClick={() => window.open(`https://www.google.com/maps/dir/?api=1&destination=${encodeURIComponent(event.address)}`, '_blank')}
                                                     >
                                                         <Navigation className="w-4 h-4" />
@@ -413,7 +413,7 @@ export default function EventPage({ params }: { params: { id: string } }) {
                                                     </Button>
                                                     <div className="pt-4 border-t">
                                                         <p className="text-sm text-muted-foreground mb-2">Available Seats</p>
-                                                        <p className="text-2xl font-bold text-[#24AE7C]">
+                                                        <p className="text-2xl font-bold text-[#F59E0B]">
                                                             {event.availableSeats - event.bookedSeats} / {event.availableSeats}
                                                         </p>
                                                     </div>
