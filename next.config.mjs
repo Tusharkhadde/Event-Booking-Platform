@@ -11,6 +11,15 @@ const nextConfig = {
     typescript: {
         ignoreBuildErrors: true,
     },
+    images: {
+        remotePatterns: [
+            {
+                protocol: 'https',
+                hostname: 'res.cloudinary.com',
+                pathname: '/**',
+            },
+        ],
+    },
     experimental: {
         optimizePackageImports: ['lucide-react', 'react-icons', 'framer-motion', 'date-fns', '@radix-ui/react-icons'],
     },
