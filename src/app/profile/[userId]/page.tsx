@@ -93,7 +93,7 @@ const EventCard = ({ event }: { event: Event }) => (
   >
     <div className="relative h-48">
       <Image
-        src={event.imageUrl && `/uploads/` + event.imageUrl || "/images/mockhead.jpg"}
+        src={event.imageUrl ? (event.imageUrl.startsWith('http') ? event.imageUrl : `/uploads/${event.imageUrl}`) : "/images/mockhead.jpg"}
         alt={event.title}
         fill
         className="object-cover"
@@ -133,7 +133,7 @@ const ReviewCard = ({ review }: { review: Review }) => (
     <div className="flex items-start gap-4">
       <div className="relative w-10 h-10">
         <Image
-          src={`/uploads/${review.user.profilePicture}`}
+          src={review.user.profilePicture ? (review.user.profilePicture.startsWith('http') ? review.user.profilePicture : `/uploads/${review.user.profilePicture}`) : "/images/mockhead.jpg"}
           alt={review.user.username}
           fill
           className="rounded-full object-cover"
@@ -184,9 +184,9 @@ export default function UserProfilePage({ params }: { params: { userId: string }
       const fetchProfileData = async () => {
         try {
           setIsLoading(true);
-          const response = await axios.get(`/api/user/${params.userId}`);
           setProfileData(response.data);
-          setProfileImage(`/uploads/${response.data.user.profilePicture}`);
+          const pic = response.data.user.profilePicture;
+          setProfileImage(pic ? (pic.startsWith('http') ? pic : `/uploads/${pic}`) : "");
 
           if (session?.user.id === params.userId) {
             setIsEditable(true);
@@ -266,8 +266,9 @@ export default function UserProfilePage({ params }: { params: { userId: string }
         }
 
         const data = await response.json();
-        setProfileImage(`/uploads/${data.image}`);
-        update({ profilePicture: data.image });
+        const newPic = data.image;
+        setProfileImage(newPic.startsWith('http') ? newPic : `/uploads/${newPic}`);
+        update({ profilePicture: newPic });
         toast.success('Profile picture updated successfully');
       };
     } catch (error) {
