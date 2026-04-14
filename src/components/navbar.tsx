@@ -226,7 +226,7 @@ const UserMenu = ({ session, userBalance, handleSignOut, background, isScrolled 
                     <span className="text-xs text-gray-400 mt-1">${userBalance || session.user?.balance}</span>
                 </div>
                 <Avatar className='w-8 h-8 border border-white/20'>
-                    <AvatarImage src={`/uploads/${session.user?.profilePicture}`} />
+                    <AvatarImage src={session.user?.profilePicture ? (session.user.profilePicture.startsWith('http') ? session.user.profilePicture : `/uploads/${session.user.profilePicture}`) : ""} />
                     <AvatarFallback className="text-white bg-gradient-to-br from-[#F59E0B] to-[#D97706]">
                         {session.user?.username?.slice(0, 2).toUpperCase()}
                     </AvatarFallback>

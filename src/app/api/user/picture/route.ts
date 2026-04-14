@@ -1,8 +1,6 @@
-import { getServerSession } from 'next-auth';
-import path from 'path';
-import fs from 'fs';
 import { authConfig } from '@/utils/auth';
 import { UserModel } from '@/utils/models';
+import { uploadToCloudinary } from '@/utils/cloudinary';
 import { NextRequest, NextResponse } from 'next/server';
 
 export async function POST(req: NextRequest) {
@@ -29,22 +27,26 @@ export async function POST(req: NextRequest) {
         }
 
         const buffer = Buffer.from(matches[2], 'base64');
-        // Create a unique filename
-        const filename = `${session.user.id}-${Date.now()}${path.extname(matches[1])}.png`;
+        
+        // Upload to Cloudinary
+        try {
+            const result: any = await uploadToCloudinary(buffer, 'profile-pictures');
+            const imageUrl = result.secure_url;
 
-        // Save the file
-        await fs.promises.writeFile(path.join(process.cwd(), "public/uploads/" + filename), new Int8Array(buffer));
+            // Update database with new image path
+            await UserModel.updateOne(
+                { _id: session.user.id },
+                { $set: { profilePicture: imageUrl } }
+            );
 
-        // Update database with new image path
-        await UserModel.updateOne(
-            { _id: session.user.id },
-            { $set: { profilePicture: filename } }
-        );
-
-        return NextResponse.json({
-            message: 'Profile picture updated successfully',
-            image: `${filename}`
-        }, { status: 200 });
+            return NextResponse.json({
+                message: 'Profile picture updated successfully',
+                image: imageUrl
+            }, { status: 200 });
+        } catch (error) {
+            console.error('Cloudinary upload error:', error);
+            return NextResponse.json({ message: 'Error uploading image to cloud' }, { status: 500 });
+        }
     } catch (error) {
         console.error('Upload error:', error);
         return NextResponse.json({ message: 'Error uploading image' }, { status: 500 });

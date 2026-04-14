@@ -330,7 +330,7 @@ export default function EventPage({ params }: { params: { id: string } }) {
                                             <CardContent className="p-4">
                                                 <div className="flex items-center gap-4">
                                                     <Avatar className="h-12 w-12">
-                                                        <AvatarImage src={`/uploads/${event.organizer.profilePicture}`} />
+                                                        <AvatarImage src={event.organizer.profilePicture ? (event.organizer.profilePicture.startsWith('http') ? event.organizer.profilePicture : `/uploads/${event.organizer.profilePicture}`) : ""} />
                                                         <AvatarFallback>
                                                             {event.organizer.username.slice(0, 2).toUpperCase()}
                                                         </AvatarFallback>
