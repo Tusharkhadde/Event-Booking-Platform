@@ -1,10 +1,9 @@
 import { NextResponse } from "next/server";
-import path from "path";
-import { writeFile } from "fs/promises";
 import { dbConnect } from "@/utils/database";
 import { EventModel } from "@/utils/models";
 import { getServerSession } from "next-auth";
 import { authConfig } from "@/utils/auth";
+import { uploadToCloudinary } from "@/utils/cloudinary";
 
 export async function POST(req: Request) {
     await dbConnect();
@@ -54,19 +53,14 @@ export async function POST(req: Request) {
             let imageUrl = null;
 
             if (file) {
-                // Handle file upload
-                const buffer = Buffer.from(await file.arrayBuffer());
-                const filename = file.name.replaceAll(" ", "_");
-                imageUrl = filename;
-
+                // Handle file upload to Cloudinary
                 try {
-                    await writeFile(
-                        path.join(process.cwd(), "public/uploads/" + filename),
-                        new Int8Array(buffer)
-                    );
+                    const buffer = Buffer.from(await file.arrayBuffer());
+                    const result: any = await uploadToCloudinary(buffer, 'events');
+                    imageUrl = result.secure_url; // Store the full URL
                 } catch (error) {
-                    console.error("Error occurred while saving file: ", error);
-                    return NextResponse.json({ error: "Failed to save file" }, { status: 500 });
+                    console.error("Error occurred while uploading to Cloudinary: ", error);
+                    return NextResponse.json({ error: "Failed to upload image to cloud" }, { status: 500 });
                 }
             }
 
