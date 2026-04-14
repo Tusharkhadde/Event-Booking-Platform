@@ -35,7 +35,7 @@ const EventCard: React.FC<Props> = ({ data }) => {
             >
                 <div className="relative aspect-video">
                     <Image
-                        src={data.imageUrl ? `/uploads/${data.imageUrl}` : "/images/mockhead.jpg"}
+                        src={data.imageUrl ? (data.imageUrl.startsWith('http') ? data.imageUrl : `/uploads/${data.imageUrl}`) : "/images/mockhead.jpg"}
                         alt={data.title}
                         fill
                         className="object-cover"
