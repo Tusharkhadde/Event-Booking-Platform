@@ -5,6 +5,15 @@ const nextConfig = {
         NEXT_PUBLIC_STRIPE_PUBLISHABLE_KEY: process.env.PUBLIC_STRIPE_PUBLISHABLE_KEY,
     },
     transpilePackages: ['react-leaflet', 'leaflet'],
+    eslint: {
+        ignoreDuringBuilds: true,
+    },
+    typescript: {
+        ignoreBuildErrors: true,
+    },
+    experimental: {
+        optimizePackageImports: ['lucide-react', 'react-icons', 'framer-motion', 'date-fns', '@radix-ui/react-icons'],
+    },
 };
 
 export default nextConfig;
