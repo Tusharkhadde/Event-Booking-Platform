@@ -1,4 +1,4 @@
-﻿"use client";
+"use client";
 import { useEffect, useRef, useState } from "react";
 import Image from "next/image";
 import { FaRegClock, FaRegCalendar, FaShare, FaStar, FaRegStar } from 'react-icons/fa';
@@ -297,7 +297,7 @@ export default function EventPage({ params }: { params: { id: string } }) {
                     >
                         <div className="relative w-full h-[300px] md:h-[500px]">
                             <Image
-                                src={event.imageUrl ? `/uploads/${event.imageUrl}` : "/images/mockhead.jpg"}
+                                src={event.imageUrl ? (event.imageUrl.startsWith('http') ? event.imageUrl : `/uploads/${event.imageUrl}`) : "/images/mockhead.jpg"}
                                 fill
                                 priority
                                 alt={event.title}
