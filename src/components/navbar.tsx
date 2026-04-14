@@ -3,7 +3,7 @@ import Image from 'next/image';
 import React, { useEffect, useState } from 'react';
 import { Button, buttonVariants } from './ui/button';
 import { FaCalendarMinus, FaBars, FaTimes } from "react-icons/fa";
-import { Ticket, Sparkles } from 'lucide-react';
+import { Ticket, Sparkles, Activity } from 'lucide-react';
 import Link from 'next/link';
 import { cn } from '@/lib/utils';
 import { Separator } from './ui/separator';
@@ -104,7 +104,7 @@ const Navbar: React.FC<Props> = ({ background = true, className }) => {
                         className="bg-gradient-to-br from-[#F59E0B] to-[#D97706] p-[2px] rounded-2xl"
                     >
                         <Image
-                            src="/images/logo.webp"
+                            src="/images/logo.png"
                             alt="Logo"
                             width={36}
                             height={36}
@@ -116,33 +116,42 @@ const Navbar: React.FC<Props> = ({ background = true, className }) => {
                         "text-white": background || isScrolled,
                         "text-white": !background && !isScrolled
                     })}>
-                        Aura
+                        EventFlow
                     </p>
                 </NavLink>
-                
+
                 <Separator orientation='vertical' className='hidden md:block bg-white/20 h-5' />
-                
+
                 <div className='hidden md:flex gap-1 items-center'>
-                    <NavLink href="/explore" className={linkClassName}>
-                        Explore Events
-                    </NavLink>
-                    {session && status === "authenticated" && (
+                    {(session?.user as any)?.role !== 'admin' && (
                         <>
-                            <NavLink
-                                href="/bookings"
-                                className={cn(linkClassName, "flex items-center gap-1.5")}
-                            >
-                                <Ticket className="w-3.5 h-3.5" />
-                                My Bookings
+                            <NavLink href="/explore" className={linkClassName}>
+                                Explore Events
                             </NavLink>
-                            <NavLink
-                                href="/bookings"
-                                className={cn(linkClassName, "flex items-center gap-1.5")}
-                            >
-                                <Sparkles className="w-3.5 h-3.5 text-amber-400" />
-                                Recommendations
-                            </NavLink>
+                            {session && status === "authenticated" && (
+                                <>
+                                    <NavLink
+                                        href="/bookings"
+                                        className={cn(linkClassName, "flex items-center gap-1.5")}
+                                    >
+                                        <Ticket className="w-3.5 h-3.5" />
+                                        My Bookings
+                                    </NavLink>
+                                    <NavLink
+                                        href="/bookings"
+                                        className={cn(linkClassName, "flex items-center gap-1.5")}
+                                    >
+                                        <Sparkles className="w-3.5 h-3.5 text-amber-400" />
+                                        Recommendations
+                                    </NavLink>
+                                </>
+                            )}
                         </>
+                    )}
+                    {(session?.user as any)?.role === 'admin' && (
+                        <NavLink href="/admin" className={cn(linkClassName, "flex items-center gap-2 text-amber-400 font-bold")}>
+                            <Activity className="w-3.5 h-3.5" /> Dashboard
+                        </NavLink>
                     )}
                 </div>
             </div>
@@ -159,7 +168,7 @@ const Navbar: React.FC<Props> = ({ background = true, className }) => {
                 ) : (
                     <AuthLinks background={background} isScrolled={isScrolled} />
                 )}
-                <CreateEventButton />
+                {(session?.user as any)?.role !== 'admin' && <CreateEventButton />}
             </div>
 
             <motion.button
@@ -213,13 +222,13 @@ const UserMenu = ({ session, userBalance, handleSignOut, background, isScrolled 
                 })}
             >
                 <div className="flex flex-col items-end hidden sm:flex">
-                    <span className="text-sm font-medium leading-none">{session.user.username}</span>
-                    <span className="text-xs text-gray-400 mt-1">${userBalance || session.user.balance}</span>
+                    <span className="text-sm font-medium leading-none">{session.user?.username}</span>
+                    <span className="text-xs text-gray-400 mt-1">${userBalance || session.user?.balance}</span>
                 </div>
                 <Avatar className='w-8 h-8 border border-white/20'>
-                    <AvatarImage src={`/uploads/${session.user.profilePicture}`} />
+                    <AvatarImage src={`/uploads/${session.user?.profilePicture}`} />
                     <AvatarFallback className="text-white bg-gradient-to-br from-[#F59E0B] to-[#D97706]">
-                        {session.user.username.slice(0, 2).toUpperCase()}
+                        {session.user?.username?.slice(0, 2).toUpperCase()}
                     </AvatarFallback>
                 </Avatar>
             </motion.div>
@@ -227,14 +236,14 @@ const UserMenu = ({ session, userBalance, handleSignOut, background, isScrolled 
         <DropdownMenuContent className="w-56 bg-black/90 backdrop-blur-xl border-white/10 text-white shadow-2xl">
             <DropdownMenuLabel className="font-normal">
                 <div className="flex flex-col space-y-1">
-                    <p className="text-sm font-medium leading-none">{session.user.username}</p>
+                    <p className="text-sm font-medium leading-none">{session.user?.username}</p>
                     <p className="text-xs leading-none text-gray-400">
-                        Balance: ${userBalance || session.user.balance}
+                        Balance: ${userBalance || session.user?.balance}
                     </p>
                 </div>
             </DropdownMenuLabel>
             <DropdownMenuSeparator className="bg-white/10" />
-            <NavLink href={`/profile/${session.user.id}`}>
+            <NavLink href={`/profile/${session.user?.id}`}>
                 <DropdownMenuItem className='hover:cursor-pointer hover:bg-white/10 focus:bg-white/10'>Profile</DropdownMenuItem>
             </NavLink>
             <NavLink href="/events">
@@ -250,6 +259,13 @@ const UserMenu = ({ session, userBalance, handleSignOut, background, isScrolled 
                     <Sparkles className="w-3.5 h-3.5 text-amber-400" /> Options For You
                 </DropdownMenuItem>
             </NavLink>
+            {(session.user as any)?.role === 'admin' && (
+                <NavLink href="/admin">
+                    <DropdownMenuItem className='hover:cursor-pointer hover:bg-amber-500/10 focus:bg-amber-500/10 text-amber-400 font-bold flex items-center gap-2'>
+                        <Activity className="w-3.5 h-3.5" /> Admin Panel
+                    </DropdownMenuItem>
+                </NavLink>
+            )}
             <DropdownMenuSeparator className="bg-white/10" />
             <DropdownMenuItem
                 className='text-red-400 hover:text-red-300 hover:bg-red-500/10 focus:bg-red-500/10 focus:text-red-300 hover:cursor-pointer'
@@ -298,30 +314,47 @@ const MobileMenuContent = ({ session, status, handleSignOut, toggleMenu }: {
     toggleMenu: () => void;
 }) => (
     <>
-        <CreateEventButton />
-        <NavLink
-            href="/explore"
-            className="text-foreground hover:text-[#D97706] transition-all"
-            onClick={toggleMenu}
-        >
-            Explore events
-        </NavLink>
-        {session && status === "authenticated" ? (
-            <div className='flex flex-col items-center gap-4'>
+        {(session?.user as any)?.role !== 'admin' && <CreateEventButton />}
+        {(session?.user as any)?.role !== 'admin' && (
+            <>
                 <NavLink
-                    href={`/profile/${session.user.id}`}
+                    href="/explore"
                     className="text-foreground hover:text-[#D97706] transition-all"
                     onClick={toggleMenu}
                 >
-                    Your profile
+                    Explore events
                 </NavLink>
-                <NavLink
-                    href="/bookings"
-                    className="flex items-center gap-2 text-foreground hover:text-[#D97706] transition-all"
-                    onClick={toggleMenu}
-                >
-                    <Ticket className="w-4 h-4" /> My Bookings
-                </NavLink>
+            </>
+        )}
+        {session && status === "authenticated" ? (
+            <div className='flex flex-col items-center gap-4'>
+                {(session?.user as any)?.role !== 'admin' && (
+                    <NavLink
+                        href={`/profile/${session?.user?.id}`}
+                        className="text-foreground hover:text-[#D97706] transition-all"
+                        onClick={toggleMenu}
+                    >
+                        Your profile
+                    </NavLink>
+                )}
+                {(session?.user as any)?.role !== 'admin' && (
+                    <NavLink
+                        href="/bookings"
+                        className="flex items-center gap-2 text-foreground hover:text-[#D97706] transition-all"
+                        onClick={toggleMenu}
+                    >
+                        <Ticket className="w-4 h-4" /> My Bookings
+                    </NavLink>
+                )}
+                {(session.user as any)?.role === 'admin' && (
+                    <NavLink
+                        href="/admin"
+                        className="flex items-center gap-2 text-amber-500 font-bold hover:text-amber-400 transition-all"
+                        onClick={toggleMenu}
+                    >
+                        <Activity className="w-4 h-4" /> Admin Panel
+                    </NavLink>
+                )}
                 <Button
                     variant="destructive"
                     className="hover:cursor-pointer transition-all"
