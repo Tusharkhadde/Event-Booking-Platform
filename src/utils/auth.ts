@@ -1,4 +1,5 @@
 import CredentialsProvider from "next-auth/providers/credentials";
+import GoogleProvider from "next-auth/providers/google";
 import { NextAuthOptions } from "next-auth";
 import { dbConnect } from "./database";
 import { UserModel } from "./models";
@@ -36,8 +37,31 @@ export const authConfig: NextAuthOptions = {
                 return null;
             },
         }),
+        GoogleProvider({
+            clientId: process.env.GOOGLE_CLIENT_ID!,
+            clientSecret: process.env.GOOGLE_CLIENT_SECRET!,
+        }),
     ],
     callbacks: {
+        async signIn({ user, account, profile }) {
+            if (account?.provider === "google") {
+                await dbConnect();
+                const existingUser = await UserModel.findOne({ email: user.email });
+                if (!existingUser) {
+                    await UserModel.create({
+                        username: user.name || user.email?.split('@')[0],
+                        email: user.email,
+                        profilePicture: user.image,
+                        role: "user",
+                        balance: 0,
+                    });
+                } else if (!existingUser.profilePicture && user.image) {
+                   existingUser.profilePicture = user.image;
+                   await existingUser.save();
+                }
+            }
+            return true;
+        },
         async jwt({ token, user, trigger, session }) {
             if (trigger === "update") {
                 if (session?.profilePicture) {
@@ -49,10 +73,10 @@ export const authConfig: NextAuthOptions = {
             }
             if (user) {
                 token.id = user.id;
-                token.username = user.username;
+                token.username = user.username || (user as any).name;
                 token.email = user.email;
-                token.profilePicture = user.profilePicture;
-                token.balance = user.balance;
+                token.profilePicture = user.profilePicture || (user as any).image;
+                token.balance = (user as any).balance || 0;
             }
             return token;
         },
