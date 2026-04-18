@@ -4,16 +4,18 @@ import { NextRequest, NextResponse } from "next/server";
 
 interface EventQuery {
     category?: { $regex: string; $options: string };
-    location?: { $regex: string; $options: string };
+    city?: { $regex: string; $options: string };
+    address?: { $regex: string; $options: string };
     title?: { $regex: string; $options: string };
     date?: { $gte?: Date; $lt?: Date };
+    $or?: Array<any>;
 }
 
 export async function GET(req: NextRequest) {
     const url = new URL(req.url);
     const category = url.searchParams.get("category");
     const location = url.searchParams.get("location");
-    const name = url.searchParams.get("name");
+    const name = url.searchParams.get("name") || url.searchParams.get("event");
     const dateFrom = url.searchParams.get("dateFrom");
     const dateTo = url.searchParams.get("dateTo");
     const page = parseInt(url.searchParams.get("page") || "1");
@@ -26,7 +28,10 @@ export async function GET(req: NextRequest) {
         query.category = { $regex: category, $options: "i" };
     }
     if (location) {
-        query.location = { $regex: location, $options: "i" };
+        query.$or = [
+            { city: { $regex: location, $options: "i" } },
+            { address: { $regex: location, $options: "i" } }
+        ];
     }
     if (name) {
         query.title = { $regex: name, $options: "i" };
