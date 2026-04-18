@@ -21,6 +21,8 @@ interface AuthCardProps {
   footerLinkText: string;
   footerLinkHref: string;
   onSubmit?: (e: React.FormEvent<HTMLFormElement>) => void;
+  onGoogleSignIn?: () => void;
+  onGithubSignIn?: () => void;
 }
 
 export function AuthCard({
@@ -30,7 +32,9 @@ export function AuthCard({
   footerText,
   footerLinkText,
   footerLinkHref,
-  onSubmit
+  onSubmit,
+  onGoogleSignIn,
+  onGithubSignIn
 }: AuthCardProps) {
   return (
     <div className="w-full max-w-sm">
@@ -57,6 +61,8 @@ export function AuthCard({
           <div className="grid grid-cols-2 gap-3">
             <Button
               variant="outline"
+              type="button"
+              onClick={onGithubSignIn}
               className="h-11 rounded-xl border-border bg-background text-foreground hover:bg-accent transition-all duration-200"
             >
               <Github className="h-4 w-4 mr-2" />
@@ -64,6 +70,8 @@ export function AuthCard({
             </Button>
             <Button
               variant="outline"
+              type="button"
+              onClick={onGoogleSignIn}
               className="h-11 rounded-xl border-border bg-background text-foreground hover:bg-accent transition-all duration-200"
             >
               <Chrome className="h-4 w-4 mr-2" />
