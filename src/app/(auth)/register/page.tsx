@@ -3,7 +3,7 @@ import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import { useState } from "react";
 import axios from "axios";
-import { useSession } from "next-auth/react";
+import { signIn, useSession } from "next-auth/react";
 import { useEffect } from 'react';
 import { useRouter } from 'next/navigation';
 import Link from "next/link";
@@ -100,6 +100,16 @@ export default function RegisterPage() {
         }
     };
 
+    const onGoogleSignIn = async () => {
+        setIsLoading(true);
+        try {
+            await signIn("google", { callbackUrl: "/" });
+        } catch (error) {
+            toast.error("An error occurred during Google sign-in");
+            setIsLoading(false);
+        }
+    };
+
     return (
         <div className="min-h-screen w-full flex items-center justify-center bg-zinc-950 px-4">
             <AuthCard
@@ -109,6 +119,7 @@ export default function RegisterPage() {
                 footerLinkText="Sign in"
                 footerLinkHref="/login"
                 onSubmit={onSubmit}
+                onGoogleSignIn={onGoogleSignIn}
             >
                 <div className="grid gap-4">
                     <div className="grid gap-2">
