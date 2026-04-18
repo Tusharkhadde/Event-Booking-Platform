@@ -63,6 +63,16 @@ export default function LoginPage(props: Props) {
         }
     };
 
+    const onGoogleSignIn = async () => {
+        setIsLoading(true);
+        try {
+            await signIn("google", { callbackUrl: "/" });
+        } catch (error) {
+            toast.error("An error occurred during Google sign-in");
+            setIsLoading(false);
+        }
+    };
+
     return (
         <div className="min-h-screen w-full flex items-center justify-center bg-zinc-950 px-4">
             <AuthCard
@@ -72,6 +82,7 @@ export default function LoginPage(props: Props) {
                 footerLinkText="Create one"
                 footerLinkHref="/register"
                 onSubmit={onSubmit}
+                onGoogleSignIn={onGoogleSignIn}
             >
                 <div className="grid gap-4">
                     <div className="grid gap-2">
