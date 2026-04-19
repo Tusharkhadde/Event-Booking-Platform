@@ -9,6 +9,7 @@ declare module "next-auth" {
             email: string;
             profilePicture: string;
             balance: number;
+            role: string;
         }
     }
     interface User {
@@ -17,6 +18,7 @@ declare module "next-auth" {
         email: string;
         profilePicture: string;
         balance: number;
+        role: string;
     }
 }
 
@@ -27,5 +29,6 @@ declare module "next-auth/jwt" {
         email: string;
         profilePicture: string;
         balance: number;
+        role: string;
     }
 }
