@@ -10,6 +10,7 @@ const userSchema = new Schema({
     public_profile: { type: Boolean, required: true, default: true },
     profilePicture: { type: String },
     refreshTokens: [{ type: String }],
+    status: { type: String, enum: ["active", "suspended"], default: "active" },
     createdAt: { type: Date, default: Date.now },
 });
 
