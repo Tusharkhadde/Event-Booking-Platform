@@ -31,7 +31,10 @@ export const authConfig: NextAuthOptions = {
                     ]
                 })
                 if (user && bcrypt.compareSync(credentials.password, user.password)) {
-                    return { id: user._id, username: user.username, email: user.email, profilePicture: user.profilePicture, balance: user.balance }
+                    if (user.status === "suspended") {
+                        throw new Error("Your account has been suspended. Please contact support.");
+                    }
+                    return { id: user._id, username: user.username, email: user.email, profilePicture: user.profilePicture, balance: user.balance, role: user.role }
                 }
 
                 return null;
@@ -81,6 +84,7 @@ export const authConfig: NextAuthOptions = {
                 token.email = user.email;
                 token.profilePicture = user.profilePicture || (user as any).image;
                 token.balance = (user as any).balance || 0;
+                token.role = (user as any).role || dbUser.role || "user";
             }
 
             // Force Sync: If token.id is missing or looks like a numeric Google ID (non-ObjectId)
@@ -102,6 +106,7 @@ export const authConfig: NextAuthOptions = {
                 session.user.email = token.email;
                 session.user.profilePicture = token.profilePicture;
                 session.user.balance = token.balance;
+                session.user.role = token.role;
             }
             return session;
         }
