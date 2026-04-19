@@ -48,7 +48,7 @@ const EventCard: React.FC<Props> = ({ data }) => {
             <div className="flex flex-col md:flex-row">
                 <div className="relative md:w-1/3 h-48 md:h-auto">
                     <Image
-                        src={data.imageUrl ? `/uploads/${data.imageUrl}` : "/images/mockhead.jpg"}
+                        src={data.imageUrl ? (data.imageUrl.startsWith('http') ? data.imageUrl : `/uploads/${data.imageUrl}`) : "/images/mockhead.jpg"}
                         alt={data.title}
                         fill
                         className="object-cover rounded-t-xl md:rounded-l-xl md:rounded-tr-none"
