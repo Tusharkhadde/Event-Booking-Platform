@@ -1,4 +1,4 @@
-﻿"use client";
+"use client";
 import { useEffect, useState } from "react";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
@@ -352,7 +352,7 @@ export default function EditEventPage({ params }: { params: { id: string } }) {
                                             {imagePreview || eventData?.imageUrl ? (
                                                 <div className="relative w-full h-40 mb-4">
                                                     <Image
-                                                        src={imagePreview || `/uploads/${eventData?.imageUrl}`}
+                                                        src={imagePreview || (eventData?.imageUrl?.startsWith('http') ? eventData.imageUrl : `/uploads/${eventData?.imageUrl}`)}
                                                         alt="Preview"
                                                         fill
                                                         className="object-cover rounded-lg"
