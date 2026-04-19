@@ -19,7 +19,7 @@ const syne = Syne({
 });
 
 export const metadata: Metadata = {
-  title: "Aura — Discover & Book Amazing Events",
+  title: "EventFlow — Discover & Book Amazing Events",
   description: "Find, book, and manage unforgettable events — concerts, conferences, workshops & more. Join thousands on Aura.",
 };
 
@@ -47,4 +47,4 @@ export default function RootLayout({
       </body>
     </html>
   );
-}
+}
