@@ -6,15 +6,20 @@ import * as bcrypt from "bcrypt";
 export async function GET(req: Request, { params }: { params: { id: string } }) {
     const { id } = params;
 
-    await dbConnect();
-    const user = await UserModel.findOne({ _id: id });
-    if (!user) {
-        return NextResponse.json({ success: false, message: "User not found" }, { status: 404 });
+    try {
+        await dbConnect();
+        const user = await UserModel.findById(id);
+        if (!user) {
+            return NextResponse.json({ success: false, message: "User not found" }, { status: 404 });
+        }
+        const events = await EventModel.find({ organizer: id });
+        const reviews = await ReviewModel.find({ user: id }).populate("event", "title").populate("user", "username profilePicture");
+        
+        return NextResponse.json({ success: true, user, events, reviews });
+    } catch (error) {
+        console.error("Error fetching user data:", error);
+        return NextResponse.json({ success: false, message: "Invalid user ID or server error" }, { status: 400 });
     }
-    const events = await EventModel.find({ organizer: id });
-    const reviews = await ReviewModel.find({ user: id }).populate("event", "title").populate("user", "username profilePicture");
-    if (user) return NextResponse.json({ success: true, user, events, reviews });
-    else return NextResponse.json({ success: false, message: "This account doesn't exist!" }, { status: 200 });
 }
 
 export async function PUT(req: Request, { params }: { params: { id: string } }) {
