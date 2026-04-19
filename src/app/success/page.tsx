@@ -58,21 +58,22 @@ const SuccessPageContent = () => {
                     >
                         <div className="absolute top-0 left-0 w-full h-2 bg-amber-500" />
                         
-                        <div className="bg-white p-4 rounded-3xl shadow-inner mb-6">
+                        <div className="bg-white p-4 rounded-[2rem] shadow-2xl relative group border-4 border-slate-100 mb-6">
                             <QRCodeCanvas 
                                 value={bookingCode} 
-                                size={200}
+                                size={220}
                                 level="H"
-                                includeMargin={true}
+                                includeMargin={false}
                                 imageSettings={{
                                     src: "/images/logo.png",
                                     x: undefined,
                                     y: undefined,
-                                    height: 40,
-                                    width: 40,
+                                    height: 48,
+                                    width: 48,
                                     excavate: true,
                                 }}
                             />
+                            <div className="absolute inset-0 border-[12px] border-white rounded-[2rem] pointer-events-none" />
                         </div>
                         
                         <div className="text-center space-y-1">
