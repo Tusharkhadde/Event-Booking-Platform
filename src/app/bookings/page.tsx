@@ -320,7 +320,7 @@ const BookingGrid = ({ bookings, isPast = false }: { bookings: Booking[], isPast
               Booked {new Date(booking.bookingDate).toLocaleDateString()}
             </div>
             {booking.event?._id && (
-              <Link href={`/event/${booking.event._id}`}>
+              <Link href={isPast ? `/event/${booking.event._id}` : `/tickets/${booking._id}`}>
                 <Button className="bg-white/5 hover:bg-white/10 text-white rounded-full transition-all border border-white/10 hover:border-white/20">
                   {isPast ? 'See Details' : 'View Tickets'}
                 </Button>
