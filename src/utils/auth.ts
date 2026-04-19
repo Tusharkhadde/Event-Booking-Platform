@@ -72,12 +72,27 @@ export const authConfig: NextAuthOptions = {
                 }
             }
             if (user) {
-                token.id = user.id;
+                // If it's a new login, ensure we use the database _id
+                await dbConnect();
+                const dbUser = await UserModel.findOne({ email: user.email });
+                
+                token.id = dbUser ? dbUser._id.toString() : user.id;
                 token.username = user.username || (user as any).name;
                 token.email = user.email;
                 token.profilePicture = user.profilePicture || (user as any).image;
                 token.balance = (user as any).balance || 0;
             }
+
+            // Force Sync: If token.id is missing or looks like a numeric Google ID (non-ObjectId)
+            const isObjectId = /^[0-9a-fA-F]{24}$/.test(token.id as string || "");
+            if (token.email && !isObjectId) {
+                await dbConnect();
+                const dbEntry = await UserModel.findOne({ email: token.email });
+                if (dbEntry) {
+                    token.id = dbEntry._id.toString();
+                }
+            }
+            
             return token;
         },
         async session({ session, token }) {
