@@ -184,6 +184,7 @@ export default function UserProfilePage({ params }: { params: { userId: string }
       const fetchProfileData = async () => {
         try {
           setIsLoading(true);
+          const response = await axios.get(`/api/user/${params.userId}`);
           setProfileData(response.data);
           const pic = response.data.user.profilePicture;
           setProfileImage(pic ? (pic.startsWith('http') ? pic : `/uploads/${pic}`) : "");
@@ -214,13 +215,14 @@ export default function UserProfilePage({ params }: { params: { userId: string }
     );
   }
 
+  if (!profileData) {
     return (
       <div className="bg-background min-h-screen">
         <Navbar />
-        <div className="container flex justify-center items-center h-screen mx-auto pt-24 px-4 sm:px-8">
+        <div className="container flex justify-center items-center h-[calc(100vh-80px)] mx-auto pt-24 px-4 sm:px-8">
           <div className="text-center">
             <h1 className="text-2xl font-bold text-foreground">
-              {profileData ? "This profile is private!" : "Profile not found"}
+              Profile not found
             </h1>
             <Link href="/">
               <Button variant="link" className="mt-4">
@@ -230,7 +232,28 @@ export default function UserProfilePage({ params }: { params: { userId: string }
           </div>
         </div>
       </div>
-    )
+    );
+  }
+
+  if (!isEditable && !profileData.user.public_profile) {
+    return (
+      <div className="bg-background min-h-screen">
+        <Navbar />
+        <div className="container flex justify-center items-center h-[calc(100vh-80px)] mx-auto pt-24 px-4 sm:px-8">
+          <div className="text-center">
+            <h1 className="text-2xl font-bold text-foreground">
+              This profile is private!
+            </h1>
+            <Link href="/">
+              <Button variant="link" className="mt-4">
+                Return to Home
+              </Button>
+            </Link>
+          </div>
+        </div>
+      </div>
+    );
+  }
 
   const handleImageUpload = async (e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0];
