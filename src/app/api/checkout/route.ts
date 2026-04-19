@@ -65,7 +65,7 @@ export async function POST(req: NextRequest) {
                     );
                 }
 
-                return NextResponse.json({ proxy: true, url: '/success' }, { status: 200 });
+                return NextResponse.json({ proxy: true, bookingId: booking._id }, { status: 200 });
             } catch (error) {
                 console.error('Proxy payment failed:', error);
                 return NextResponse.json({ error: 'Failed to process proxy payment' }, { status: 500 });
