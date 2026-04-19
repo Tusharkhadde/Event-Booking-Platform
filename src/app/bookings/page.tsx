@@ -211,7 +211,7 @@ export default function BookingsLandingPage() {
                   <div className="bg-slate-900 border border-white/5 rounded-2xl overflow-hidden hover:border-amber-500/30 transition-all duration-300">
                     <div className="relative h-40 overflow-hidden">
                       <Image
-                        src={event.imageUrl ? `/uploads/${event.imageUrl}` : "/images/mockhead.jpg"}
+                        src={event.imageUrl ? (event.imageUrl.startsWith('http') ? event.imageUrl : `/uploads/${event.imageUrl}`) : "/images/mockhead.jpg"}
                         alt={event.title}
                         fill
                         className="object-cover group-hover:scale-105 transition-transform duration-500"
@@ -253,7 +253,7 @@ const BookingGrid = ({ bookings, isPast = false }: { bookings: Booking[], isPast
         {/* Ticket Left Side (Image) */}
         <div className="relative w-full sm:w-48 h-40 sm:h-auto overflow-hidden flex-shrink-0 flex sm:flex-col items-center justify-center bg-slate-800">
           <Image
-            src={booking.event?.imageUrl ? `/uploads/${booking.event.imageUrl}` : "/images/mockhead.jpg"}
+            src={booking.event?.imageUrl ? (booking.event.imageUrl.startsWith('http') ? booking.event.imageUrl : `/uploads/${booking.event.imageUrl}`) : "/images/mockhead.jpg"}
             alt={booking.event?.title || "Event"}
             fill
             className="object-cover group-hover:scale-110 transition-transform duration-700"
