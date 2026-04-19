@@ -64,38 +64,9 @@ const BottomBar: React.FC<Props> = ({ price = 0, eventId }) => {
         }
     }, [eventId]);
 
-    const handleCheckout = async () => {
-
-        const stripe = await loadStripe(
-            process.env.NEXT_PUBLIC_STRIPE_PUBLISHABLE_KEY as string
-        );
-        if (!stripe) {
-            return;
-        }
-
-        try {
-            console.log(session)
-            const response = await axios.post('/api/checkout', {
-                amount: price,
-                quantity: ticketsToBuy,
-                eventName: event?.title,
-                userId: session?.user.id,
-                eventId: event?._id,
-            });
-
-            if (response.status === 200) {
-                if (response.data.proxy && response.data.url) {
-                    window.location.href = response.data.url;
-                    return;
-                }
-                await stripe.redirectToCheckout({
-                    sessionId: response.data.id
-                });
-            } else {
-                console.error('Failed to create checkout session');
-            }
-        } catch (error) {
-            console.error('Error creating checkout session:', error);
+    const handleCheckout = () => {
+        if (eventId && ticketsToBuy > 0) {
+            window.location.href = `/checkout?eventId=${eventId}&quantity=${ticketsToBuy}&price=${price}`;
         }
     };
 
